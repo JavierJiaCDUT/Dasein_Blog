@@ -90,4 +90,16 @@ tags: [tag1, tag2]
 
 ## Deployment
 
-Static output to `dist/`. Currently configured for GitHub Pages at `/dasein` base path. Change `site` and `base` in `astro.config.mjs` for other deployments.
+Static output to `dist/`. Base path `/dasein`.
+
+### GitHub Pages
+
+已配置好，push 到 main 即可。
+
+### Cloudflare Workers
+
+```bash
+npm run build && npx wrangler deploy
+```
+
+配置文件：`wrangler.jsonc`（指定 `assets.directory: "./dist"`）
