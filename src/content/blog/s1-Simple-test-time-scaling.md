@@ -36,7 +36,7 @@ Researchers at Stanford, UW, and AI2 developed `s1-32B`, an open-source model th
 
 This research tackles a fundamental challenge in artificial intelligence: how to improve the reasoning capabilities of large language models (LLMs) without requiring massive computational resources. While companies like OpenAI have demonstrated impressive test-time scaling with their o1 model—where performance increases as more compute is allocated during inference—the underlying methods have remained proprietary. This work introduces a "simple" approach to replicating these capabilities using just 1,000 carefully curated training examples and a straightforward inference technique called "budget forcing."
 
-![Figure 1](<../../../public/blog/s1/Figure 1.png>)
+![Figure 1](/blog/s1/Figure 1.png)
 *Figure 1: The s1 model demonstrates clear test-time scaling behavior across three challenging benchmarks: MATH500 (mathematical problem solving), AIME24 (competition math), and GPQA Diamond (PhD-level science questions). Performance consistently improves as more thinking tokens are allocated during inference.* s1 模型在三项极具挑战性的基准测试中展现了清晰的测试时扩展行为，分别是：MATH500（数学问题求解）、AIME24（竞赛数学）和 GPQA Diamond（博士级科学问题）。随着推理过程中分配的“思考令牌”越来越多，模型的性能也在持续提升。
 
 **注释**
@@ -106,7 +106,7 @@ The foundation of this approach lies in the careful curation of a small but high
     
 4. **Mathematics Subject Classification (MSC)**：数学学科分类系统，是由美国数学学会等机构制定的标准，用于对数学研究领域进行分类编号。
     
-![Figure 2](<../../../public/blog/s1/Figure 2.png>)
+![Figure 2](/blog/s1/Figure 2.png)
 *Figure 2: The s1K dataset spans 50 diverse mathematical and scientific domains, from number theory and calculus to computer science and physics, ensuring comprehensive coverage of reasoning challenges.* s1K 数据集横跨 50 个多元的数学与科学领域，从数论、微积分到计算机科学和物理学，确保了对各类推理挑战的全面覆盖。
 
 For each question, detailed reasoning traces were generated using Google's Gemini Flash Thinking API, creating step-by-step thought processes that demonstrate how to approach complex problems systematically.
@@ -140,7 +140,7 @@ The core innovation lies in "budget forcing," a remarkably simple technique for 
     
 5. **Token (令牌)**：大模型处理文本的最小单位。这里的 Token 限制实际上就是对模型“思考长度”的限制。
     
-![Figure 3](<../../../public/blog/s1/Figure 3.png>)
+![Figure 3](/blog/s1/Figure 3.png)
 *Figure 3: An example of the model's reasoning process, showing how it can self-correct when given more thinking time. Initially answering "2" for the number of r's in "raspberry," the model reconsiders and correctly identifies all three occurrences.* 模型推理过程的一个示例，展示了当给予更多思考时间时，模型如何进行自我纠正。起初，该模型将 "raspberry" 中 "r" 的数量回答为 "2"，但在重新思考后，它正确识别出了全部 3 处。
 
 The elegance of this approach lies in its simplicity—no complex search algorithms or multi-agent systems are required. The model naturally learns to utilize additional thinking time when available, leading to improved performance on challenging reasoning tasks.
@@ -178,7 +178,7 @@ s1-32B 模型在多项具有挑战性的基准测试中取得了卓越的成果�
     
 4. **样本效率**：指模型在达到特定性能水平时所需训练数据的多少。此处强调该模型用极少量数据就超越了使用海量数据的对手。
     
-![Figure 4](<../../../public/blog/s1/Figure 4.png>)
+![Figure 4](/blog/s1/Figure 4.png)
 *Figure 4: The s1 model achieves competitive performance on MATH500 while using dramatically fewer training examples than other reasoning models, positioning it as the most sample-efficient approach.* s1 模型在 MATH500 上取得了极具竞争力的表现，同时其所使用的训练样本数量远少于其他推理模型，使其成为样本效率最高的方法。
 
 * * *
@@ -227,7 +227,7 @@ The research also explores how sequential scaling (where later computations buil
     
 3. **互补**：原文强调两种方法可以结合使用以产生协同效应，而不是二选一的关系。
     
-![Figure 5](<../../../public/blog/s1/Figure 5.png>)
+![Figure 5](/blog/s1/Figure 5.png)
 *Figure 5: Comparison of sequential scaling (budget forcing) with parallel scaling methods (REBASE and majority voting) on AIME24, showing how different approaches can be combined for optimal performance.* 在 AIME24 上顺序扩展（预算强制）与并行扩展方法（REBASE 和多数投票）的对比，展示了不同方法如何结合以实现最佳性能。
 
 * * *
