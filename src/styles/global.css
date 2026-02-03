@@ -32,6 +32,20 @@
 		--color-border: color-mix(in oklab, var(--color-ink) 16%, transparent);
 		--grid-line: color-mix(in oklab, var(--color-ink) 10%, transparent);
 	}
+
+	/* Prose: light=black, dark=white */
+	.prose,
+	.prose * {
+		color: var(--color-ink) !important;
+	}
+
+	.prose :where(pre, code) {
+		background-color: var(--color-surface);
+	}
+
+	.prose :where(hr, thead, tbody tr, th, td) {
+		border-color: var(--color-border);
+	}
 	*,
 	*::before,
 	*::after {
@@ -277,7 +291,6 @@
 
 	.post-article p {
 		margin: 0;
-		color: var(--color-muted);
 	}
 
 	.post-article h2,

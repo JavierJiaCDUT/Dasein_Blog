@@ -9,11 +9,19 @@ import tailwindcss from "@tailwindcss/vite";
 
 import icon from "astro-icon";
 
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://roicort.github.io",
   base: "/dasein",
   integrations: [mdx(), sitemap(), pagefind(), icon()],
+
+  markdown: {
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex],
+  },
 
   vite: {
     plugins: [tailwindcss()],
