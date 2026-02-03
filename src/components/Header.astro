@@ -1,8 +1,5 @@
 ---
-import { getSite } from "../utils/consts";
 import HeaderLink from "./HeaderLink.astro";
-
-const site = await getSite();
 import SearchModal from "./SearchModal.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
@@ -29,7 +26,7 @@ import ThemeToggle from "./ThemeToggle.astro";
       <SearchModal class="text-xs 2xl:text-lg text-base-900 hover:text-base-500 font-bold uppercase" />
 
       <a
-        href="https://github.com/roicort/launchpad"
+        href="https://github.com/JavierJiaCDUT/Dasein_Blog"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Visit the GitHub repository"
@@ -56,7 +53,7 @@ import ThemeToggle from "./ThemeToggle.astro";
         <HeaderLink href="/projects">Projects</HeaderLink>
         <HeaderLink href="/about">About</HeaderLink>
         <SearchModal class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" />
-        <a class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" href="https://github.com/roicort/launchpad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" href="https://github.com/JavierJiaCDUT/Dasein_Blog" target="_blank" rel="noopener noreferrer">GitHub</a>
         <button id="mobile-debug" aria-label="Toggle debug borders" class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase">Debug</button>
         <ThemeToggle class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" />
       </div>

@@ -42,7 +42,7 @@ let {
 } = Astro.props as Props;
 
 function getPostData(item: RawPost) {
-    return item && (item as any).data ? (item as any).data : item;
+    return item && item.data ? item.data : item;
 }
 
 if (posts.length === 0) {
@@ -53,8 +53,6 @@ if (posts.length === 0) {
         (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
     );
 }
-
-const subpath = import.meta.env.BASE_URL;
 
 const visiblePosts = typeof limit === "number" ? posts.slice(0, limit) : posts;
 

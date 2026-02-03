@@ -8,8 +8,9 @@ import { getCollection } from "astro:content";
 import { getSite } from '../utils/consts';
 import ProjectList from '../components/ProjectList.astro';
 import Social from '../components/Social.astro';
+import type { CVEntry } from '../content.config';
 
-const cv = (await getCollection("cv" as any)) as any[];
+const cv = await getCollection("cv") as CVEntry[];
 
 const site = await getSite();
 ---
