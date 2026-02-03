@@ -27,7 +27,7 @@ The DeepSeek-R1 research introduces a paradigm shift in training reasoning-capab
 
 DeepSeek-R1 的研究为训练具备推理能力的大语言模型（LLM）引入了范式转变。该研究不再依赖传统的人工标注推理示例进行监督微调（SFT），而是展示了复杂的推理能力可以通过纯基于结果的强化学习（RL）自然涌现。这一成果挑战了以往认为“高质量的人类演示是教授复杂推理的必要条件”的传统观念，并提出模型完全可以通过自我进化，发现比人类思维方式更优越的、非类人的推理路径。
 
-![Figure 1](/dasein/blog/deepseek-r1/fig1.jpeg)
+![Figure 1](/blog/deepseek-r1/fig1.jpeg)
 
 The figure above illustrates the dramatic improvement in DeepSeek-R1-Zero's performance on the AIME 2024 benchmark during pure RL training. The model's accuracy increased from 15.6% to 77.9% with pass@1 sampling, and reached 86.7% with self-consistency decoding, significantly surpassing the average human participant performance (39%).
 
@@ -106,7 +106,7 @@ DeepSeek-R1-Zero demonstrates remarkable emergent behaviors during training. The
 1. **顿悟时刻**：心理学词汇，指突然理解问题或找到解决方案的瞬间。在 AI 推测中，指模型在生成过程中突然切换解题思路，并在后续的回答中展现出更正确或高效的逻辑路径。
 1. **反思性语言**：指模型在输出推理链时，使用了体现自我监控、自我纠错倾向的词汇。DeepSeek-R1-Zero 因为没有经过 SFT 压制，反而保留了这种原始的“思考痕迹”。
 
-![Figure 2](/dasein/blog/deepseek-r1/fig2.jpeg)
+![Figure 2](/blog/deepseek-r1/fig2.jpeg)
 
 The figure shows how DeepSeek-R1-Zero naturally learns to generate longer responses ("thinking time") as training progresses, with average response length increasing from under 1,000 to over 14,000 tokens, indicating the development of more elaborate reasoning processes.
 
@@ -141,7 +141,7 @@ These results often match or exceed state-of-the-art models like OpenAI-o1, demo
 ### Competitive Performance Across Domains
 ### 各领域的竞争力表现
 
-![Figure 3](/dasein/blog/deepseek-r1/fig3.jpeg)
+![Figure 3](/blog/deepseek-r1/fig3.jpeg)
 
 The comprehensive training framework enables strong performance beyond mathematics:
 
@@ -198,7 +198,7 @@ Notably, a 1.5B parameter Qwen model distilled from DeepSeek-R1 surpasses many l
 ### Reinforcement Learning System Design
 ### 强化学习系统设计
 
-![Figure 4](/dasein/blog/deepseek-r1/fig4.jpeg)
+![Figure 4](/blog/deepseek-r1/fig4.jpeg)
 
 The research employs a sophisticated RL infrastructure designed for large-scale training. GRPO demonstrates superior efficiency compared to traditional PPO, achieving faster convergence and more stable training dynamics. The system architecture includes:
 
