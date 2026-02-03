@@ -59,10 +59,34 @@ title: "Post Title"
 description: "Brief description"
 pubDate: 2025-01-15
 updatedDate: 2025-01-20  # optional
-heroImage: ../../assets/blog/image.jpg  # optional
+heroImage: ../../assets/blog/post-name/hero.jpg  # optional
 tags: [tag1, tag2]
 ---
 ```
+
+### Image Placement
+
+| 图片类型 | 存放位置 | 引用方式 |
+|----------|----------|----------|
+| 封面图 (heroImage) | `src/assets/blog/<post-name>/` | frontmatter: `heroImage: ../../assets/blog/<post-name>/hero.jpg` |
+| 文章内联图 | `public/blog/<post-name>/` | markdown: `![alt](/dasein/blog/<post-name>/fig.jpg)` |
+
+**推荐尺寸**（2倍图适配 Retina）：
+- 封面图：2040 × 1020 px（2:1 比例）
+- 内联图：宽度 ≤ 1792 px，高度自由
+
+**注意**：
+- `src/assets/` 图片会被 Astro 优化（压缩、格式转换）
+- `public/` 图片原样复制，不处理
+- markdown 内联图片路径必须包含 base path `/dasein`
+- 不要在两个位置放重复文件
+- 格式优先使用 `.jpg` 或 `.webp`
+
+### Math Support
+
+支持 LaTeX 公式（remark-math + rehype-katex）：
+- 行内公式：`$E = mc^2$`
+- 块级公式：`$$\sum_{i=1}^n x_i$$`
 
 ## Deployment
 

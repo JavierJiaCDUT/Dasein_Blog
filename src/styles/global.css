@@ -35,16 +35,23 @@
 
 	/* Prose: light=black, dark=white */
 	.prose,
-	.prose * {
+	.prose *:not(pre):not(code):not(pre *) {
 		color: var(--color-ink) !important;
 	}
 
 	.prose :where(pre, code) {
-		background-color: var(--color-surface);
+		background-color: color-mix(in oklab, var(--color-ink) 10%, var(--color-paper));
+		color: var(--color-ink);
 	}
 
 	.prose :where(hr, thead, tbody tr, th, td) {
 		border-color: var(--color-border);
+	}
+
+	.prose img {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	*,
 	*::before,
