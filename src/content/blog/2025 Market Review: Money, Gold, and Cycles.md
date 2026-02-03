@@ -1,4 +1,4 @@
-668213---
+---
 title: '2025 Market Review: Money, Gold, and Cycles'
 description: '基于达利欧式宏观逻辑的2025年全球市场深度复盘，分析货币价值、财富转移与大周期的关系'
 pubDate: 2026-02-02
