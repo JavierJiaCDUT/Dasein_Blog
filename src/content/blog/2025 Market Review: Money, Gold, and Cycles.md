@@ -3,7 +3,7 @@ title: '2025 Market Review: Money, Gold, and Cycles'
 description: '基于达利欧式宏观逻辑的2025年全球市场深度复盘，分析货币价值、财富转移与大周期的关系'
 pubDate: 2026-02-02
 heroImage: ../../assets/blog/2025-market-review/G96Gz8WXUAApbsW.jpeg
-tags: [macro, gold, market]
+tags: [Macro, Gold, Market]
 ---
 
 这篇由典型"达利欧式（Ray Dalio）"宏观逻辑驱动的文章，是对刚刚过去的2025年全球市场的一份深度复盘。它不仅是一份业绩报告，更是一篇关于 **"货币价值、财富转移与大周期（Big Cycle）"** 的宏观哲学。

@@ -3,7 +3,7 @@ title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcemen
 description: "DeepSeek-AI developed DeepSeek-R1, an LLM demonstrating that sophisticated reasoning capabilities can emerge through pure outcome-based reinforcement learning without reliance on human-annotated reasoning trajectories. "
 pubDate: "Jan 29 2026"
 heroImage: ../../assets/blog/deepseek-r1/R1_Hero.jpeg
-tags: [ai, llm, research]
+tags: [AI, LLM, Research]
 ---
 
 ## Summary
