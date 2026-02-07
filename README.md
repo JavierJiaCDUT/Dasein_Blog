@@ -72,9 +72,9 @@ heroImage: ../../assets/blog/ship.jpg
 
 ## Available scripts
 
-- `npm run dev`: server on `localhost:4321` (Astro default).
-- `npm run build`: outputs `dist/` ready to deploy.
-- `npm run preview`: serves the built site locally.
+- `bun run dev`: server on `localhost:4321` (Astro default).
+- `bun run build`: outputs `dist/` ready to deploy.
+- `bun run preview`: serves the built site locally.
 
 ## Deploy
 
