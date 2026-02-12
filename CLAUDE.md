@@ -69,7 +69,7 @@ tags: [tag1, tag2]
 | 图片类型 | 存放位置 | 引用方式 |
 |----------|----------|----------|
 | 封面图 (heroImage) | `src/assets/blog/<post-name>/` | frontmatter: `heroImage: ../../assets/blog/<post-name>/hero.jpg` |
-| 文章内联图 | `public/blog/<post-name>/` | markdown: `![alt](/dasein/blog/<post-name>/fig.jpg)` |
+| 文章内联图 | `public/blog/<post-name>/` | markdown: `![alt](/blog/<post-name>/fig.jpg)` |
 
 **推荐尺寸**（2倍图适配 Retina）：
 - 封面图：2040 × 1020 px（2:1 比例）
@@ -78,9 +78,22 @@ tags: [tag1, tag2]
 **注意**：
 - `src/assets/` 图片会被 Astro 优化（压缩、格式转换）
 - `public/` 图片原样复制，不处理
-- markdown 内联图片路径必须包含 base path `/dasein`
+- `public/` 内的文件在 markdown 中用**绝对路径**引用（以 `/` 开头，不含 `/dasein`）
+- `src/assets/` 内的文件在 frontmatter 中用**相对路径**引用（`../../assets/...`）
 - 不要在两个位置放重复文件
 - 格式优先使用 `.jpg` 或 `.webp`
+
+### File Naming Convention
+
+**必须遵守的命名规范**（否则文章无法显示）：
+- ✅ 使用 kebab-case：`file-name-example.md`
+- ✅ 或首字母大写+短横线：`File-Name-Example.md`
+- ❌ **绝对不要使用空格**：`File Name Example.md`
+
+**原因**：文件名中的空格会导致：
+1. URL 路由解析失败（空格被转义为 `%20` 或直接失败）
+2. 构建系统可能跳过该文件
+3. Git 版本控制时容易出错
 
 ### Math Support
 
@@ -103,3 +116,31 @@ npm run build && npx wrangler deploy
 ```
 
 配置文件：`wrangler.jsonc`（指定 `assets.directory: "./dist"`）
+
+### Git Push 大文件问题
+
+如果推送包含大量图片的 commit 时遇到网络错误：
+
+```bash
+# 错误示例
+error: RPC failed; curl 16 Error in the HTTP2 framing layer
+error: RPC failed; curl 55 Send failure: Broken pipe
+```
+
+**解决方案**：
+
+```bash
+# 1. 增加 HTTP buffer 大小（500MB）
+git config http.postBuffer 524288000
+
+# 2. 切换到更稳定的 HTTP/1.1 协议
+git config --local http.version HTTP/1.1
+
+# 3. 重新推送
+git push origin main
+```
+
+**预防措施**：
+- 图片优先使用压缩格式（WebP、优化的 JPEG）
+- 单次 commit 避免添加超过 5MB 的文件
+- 考虑使用 Git LFS 管理大型资源文件
