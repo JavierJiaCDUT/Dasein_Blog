@@ -3,12 +3,11 @@ import { getCollection } from 'astro:content';
 import Card from '../../components/Card.astro';
 import PageLayout from '../../layouts/PageLayout.astro';
 
+import { getPublishedPosts } from '../../utils/content';
 import { getSite } from '../../utils/consts';
 import { slugify, withBase } from '../../utils/slugify';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getPublishedPosts();
 const [featured, ...rest] = posts;
 const site = await getSite();
 ---

@@ -19,7 +19,7 @@ bun run preview      # Preview production build
 
 | Collection | Source | Schema |
 |------------|--------|--------|
-| `blog` | `src/content/blog/*.{md,mdx}` | title, description, pubDate, updatedDate?, heroImage?, tags[] |
+| `blog` | `src/content/blog/*.{md,mdx}` | title, description, pubDate, updatedDate?, heroImage?, tags[], draft? |
 | `projects` | `src/content/projects/*.{md,mdx}` | Same as blog |
 | `cv` | `src/content/cv.yml` | Sections with heading, items[] |
 | `site` | `src/site-config.yml` | author info, social links |
@@ -144,3 +144,30 @@ git push origin main
 - 图片优先使用压缩格式（WebP、优化的 JPEG）
 - 单次 commit 避免添加超过 5MB 的文件
 - 考虑使用 Git LFS 管理大型资源文件
+
+## 开发/生产环境区分
+
+本项目有两个功能仅在开发环境（`npm run dev`）中生效，生产构建（`npm run build`）时自动隐藏。
+
+### 1. 草稿文章（Draft Posts）
+
+在 frontmatter 中添加 `draft: true`，文章仅在本地 dev 模式可见，生产构建不生成页面：
+
+```yaml
+---
+title: "WIP Post"
+draft: true
+tags: [AI]
+---
+```
+
+- **实现**：`src/utils/content.ts` 中的 `getPublishedPosts()` 函数统一处理过滤逻辑
+- **规则**：所有博客查询**必须使用 `getPublishedPosts()`** 而非直接调用 `getCollection('blog')`
+- **默认值**：`draft` 默认为 `false`（不写即为已发布）
+
+### 2. Debug 按钮
+
+导航栏的 Debug 按钮（切换调试边框）仅在开发模式渲染：
+
+- **实现**：`src/components/Header.astro` 中用 `{import.meta.env.DEV && (...)}` 条件渲染
+- **包含**：桌面端 `#debug-toggle` 和移动端 `#mobile-debug` 两个按钮

@@ -33,14 +33,16 @@ import ThemeToggle from "./ThemeToggle.astro";
       >
         GitHub
       </a>
-      <button
-        id="debug-toggle"
-        aria-label="Toggle debug borders"
-        aria-pressed="false"
-        class="text-xs 2xl:text-lg text-base-900 hover:text-base-500 font-bold uppercase"
-      >
-        Debug
-      </button>
+      {import.meta.env.DEV && (
+        <button
+          id="debug-toggle"
+          aria-label="Toggle debug borders"
+          aria-pressed="false"
+          class="text-xs 2xl:text-lg text-base-900 hover:text-base-500 font-bold uppercase"
+        >
+          Debug
+        </button>
+      )}
       <ThemeToggle class="text-xs 2xl:text-lg text-base-900 hover:text-base-500 font-bold uppercase" />
     </div>
 
@@ -54,7 +56,9 @@ import ThemeToggle from "./ThemeToggle.astro";
         <HeaderLink href="/about">About</HeaderLink>
         <SearchModal class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" />
         <a class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" href="https://github.com/JavierJiaCDUT/Dasein_Blog" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <button id="mobile-debug" aria-label="Toggle debug borders" class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase">Debug</button>
+        {import.meta.env.DEV && (
+          <button id="mobile-debug" aria-label="Toggle debug borders" class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase">Debug</button>
+        )}
         <ThemeToggle class="text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase" />
       </div>
     </div>

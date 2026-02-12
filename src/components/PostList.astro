@@ -1,7 +1,7 @@
 ---
 
 import Card from './Card.astro';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../utils/content';
 import { withBase } from '../utils/slugify';
 
 interface RawPost {
@@ -49,9 +49,7 @@ if (posts.length === 0) {
     console.warn(
         '[PostList] No posts provided; fetching from "blog" collection.'
     );
-    posts = posts.concat(await getCollection("blog")).sort(
-        (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-    );
+    posts = posts.concat(await getPublishedPosts());
 }
 
 const visiblePosts = typeof limit === "number" ? posts.slice(0, limit) : posts;

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../utils/content';
 import Card from '../../components/Card.astro';
 import PageLayout from '../../layouts/PageLayout.astro';
 import { getSite } from '../../utils/consts';
@@ -8,7 +8,7 @@ import { slugify, withBase } from '../../utils/slugify';
 const site = await getSite();
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	const posts = await getPublishedPosts();
 	const tags = new Map<string, string>();
 
 	posts.forEach((post) => {
@@ -29,7 +29,7 @@ interface Props {
 
 const { tagLabel } = Astro.props as Props;
 const tagParam = Astro.params.tag ?? '';
-const posts = (await getCollection('blog')).filter((post) =>
+const posts = (await getPublishedPosts()).filter((post) =>
 	(post.data.tags ?? []).some((tag) => slugify(tag) === tagParam),
 );
 
