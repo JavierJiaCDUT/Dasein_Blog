@@ -1,0 +1,192 @@
+---
+// No props needed - data is embedded
+---
+
+<figure class="inequality-chart-wrapper">
+  <figcaption class="chart-subtitle">
+    Estimated share of all US wealth held by the top 1%
+  </figcaption>
+  <div class="chart-container">
+    <canvas id="inequalityChart"></canvas>
+  </div>
+  <p class="chart-source">
+    Source: World Inequality Database; adults, equal split of net personal wealth
+  </p>
+</figure>
+
+<script>
+  const rawData: [string, number | null][] = [
+    ["1900",42.45],["1901",null],["1902",null],["1903",null],["1904",null],
+    ["1905",null],["1906",null],["1907",null],["1908",null],["1909",null],
+    ["1910",46.65],["1911",null],["1912",null],["1913",46.63],["1914",46.11],
+    ["1915",46.14],["1916",44.46],["1917",42],["1918",38.43],["1919",41.27],
+    ["1920",36.96],["1921",38.13],["1922",41.12],["1923",36.56],["1924",38.61],
+    ["1925",41.89],["1926",43.5],["1927",45.87],["1928",48.55],["1929",48.67],
+    ["1930",44.17],["1931",39.61],["1932",39.38],["1933",41.5],["1934",42.13],
+    ["1935",41.54],["1936",43.96],["1937",44.73],["1938",40.85],["1939",41.9],
+    ["1940",38.98],["1941",35.88],["1942",35.38],["1943",35.54],["1944",32.85],
+    ["1945",33.01],["1946",30.89],["1947",29.75],["1948",29.2],["1949",28.36],
+    ["1950",29.6],["1951",29.14],["1952",28.82],["1953",27.63],["1954",28.23],
+    ["1955",28.48],["1956",28.79],["1957",28.42],["1958",27.97],["1959",28.55],
+    ["1960",28.54],["1961",28.7],["1962",28.66],["1963",28.34],["1964",28.03],
+    ["1965",27.9],["1966",27.77],["1967",27.66],["1968",29.21],["1969",27.38],
+    ["1970",26.67],["1971",26.62],["1972",26.44],["1973",25.31],["1974",24.06],
+    ["1975",23.7],["1976",22.6],["1977",22.68],["1978",21.79],["1979",23.23],
+    ["1980",23.23],["1981",23.89],["1982",24.5],["1983",23.96],["1984",24.16],
+    ["1985",24.19],["1986",24.92],["1987",26.57],["1988",28.44],["1989",28.85],
+    ["1990",29.05],["1991",28.57],["1992",29.51],["1993",29.06],["1994",29.28],
+    ["1995",29.3],["1996",29.65],["1997",30.47],["1998",31.48],["1999",31.81],
+    ["2000",32.34],["2001",32.14],["2002",31.47],["2003",31.1],["2004",31.69],
+    ["2005",32.32],["2006",32.71],["2007",33.4],["2008",33.99],["2009",33.12],
+    ["2010",34.62],["2011",35.28],["2012",36.62],["2013",35.64],["2014",35.83],
+    ["2015",35.81],["2016",35.5],["2017",35.48],["2018",35.2],["2019",34.85],
+    ["2020",35.13],["2021",36.26],["2022",34.89],["2023",34.78],["2024",34.78]
+  ];
+
+  // Interpolate null values for a smooth line
+  function interpolate(data: [string, number | null][]): { x: string; y: number }[] {
+    const result: { x: string; y: number }[] = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i][1] !== null) {
+        result.push({ x: data[i][0], y: data[i][1] as number });
+      } else {
+        // find prev and next non-null
+        let prevIdx = i - 1;
+        while (prevIdx >= 0 && data[prevIdx][1] === null) prevIdx--;
+        let nextIdx = i + 1;
+        while (nextIdx < data.length && data[nextIdx][1] === null) nextIdx++;
+        if (prevIdx >= 0 && nextIdx < data.length) {
+          const t = (i - prevIdx) / (nextIdx - prevIdx);
+          const v = (data[prevIdx][1] as number) + t * ((data[nextIdx][1] as number) - (data[prevIdx][1] as number));
+          result.push({ x: data[i][0], y: Math.round(v * 100) / 100 });
+        }
+      }
+    }
+    return result;
+  }
+
+  const points = interpolate(rawData);
+  const labels = points.map(p => p.x);
+  const values = points.map(p => p.y);
+
+  // Determine color based on current theme
+  function getThemeColors() {
+    const isDark = document.documentElement.classList.contains('dark') ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return {
+      lineColor: isDark ? '#60a5fa' : '#2563eb',
+      fillStart: isDark ? 'rgba(96,165,250,0.25)' : 'rgba(37,99,235,0.15)',
+      fillEnd: 'rgba(0,0,0,0)',
+      gridColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+      tickColor: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)',
+    };
+  }
+
+  async function initChart() {
+    const { Chart, registerables } = await import('https://cdn.jsdelivr.net/npm/chart.js@4.4.2/+esm');
+    Chart.register(...registerables);
+
+    const canvas = document.getElementById('inequalityChart') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+
+    const colors = getThemeColors();
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight || 300);
+    gradient.addColorStop(0, colors.fillStart);
+    gradient.addColorStop(1, colors.fillEnd);
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          borderColor: colors.lineColor,
+          backgroundColor: gradient,
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHitRadius: 6,
+          fill: true,
+          tension: 0.3,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 2,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => ` ${ctx.parsed.y.toFixed(1)}%`,
+              title: (items) => items[0].label,
+            },
+            backgroundColor: colors.lineColor,
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            padding: 10,
+            cornerRadius: 6,
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: colors.tickColor,
+              maxTicksLimit: 13,
+              font: { size: 11 },
+            },
+            grid: { color: colors.gridColor },
+            border: { color: colors.gridColor },
+          },
+          y: {
+            min: 20,
+            max: 52,
+            ticks: {
+              color: colors.tickColor,
+              callback: (v) => `${v}%`,
+              font: { size: 11 },
+            },
+            grid: { color: colors.gridColor },
+            border: { color: colors.gridColor },
+          },
+        },
+      },
+    });
+  }
+
+  initChart();
+</script>
+
+<style>
+  .inequality-chart-wrapper {
+    margin: 2rem 0;
+    padding: 1.25rem 1.25rem 0.75rem;
+    border: 1px solid var(--color-border, rgba(0,0,0,0.1));
+    border-radius: 0.75rem;
+    background: var(--color-surface, #fff);
+  }
+
+  .chart-subtitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    color: var(--color-ink, #111);
+    line-height: 1.4;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .chart-source {
+    margin: 0.75rem 0 0;
+    font-size: 0.72rem;
+    color: var(--color-muted, #888);
+  }
+</style>
