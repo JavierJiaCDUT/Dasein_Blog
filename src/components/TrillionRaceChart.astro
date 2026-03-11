@@ -1,0 +1,307 @@
+---
+type Series = {
+  color: string;
+  name: string;
+  values: Array<number | null>;
+};
+
+const years = [
+  "2012",
+  "2013",
+  "2014",
+  "2015",
+  "2016",
+  "2017",
+  "2018",
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+];
+
+const series: Series[] = [
+  {
+    name: "Elon Musk",
+    color: "#0f766e",
+    values: [null, 7.9, 10.6, 12.4, 10.7, 20.0, 24.0, 27.6, 169.7, 270.3, 137.0, 229.0, 432.4, 619.4],
+  },
+  {
+    name: "Larry Page",
+    color: "#2563eb",
+    values: [21.4, 31.4, 29.7, 39.9, 39.9, 52.4, 51.3, 64.6, 82.4, 128.4, 82.9, 126.4, 168.3, 269.0],
+  },
+  {
+    name: "Jeff Bezos",
+    color: "#7c3aed",
+    values: [23.6, 36.0, 28.6, 59.7, 65.4, 99.0, 124.9, 114.9, 190.3, 192.3, 107.0, 176.9, 238.7, 253.3],
+  },
+  {
+    name: "Larry Ellison",
+    color: "#dc2626",
+    values: [39.3, 43.7, 48.8, 39.7, 41.5, 53.1, 49.3, 58.8, 79.7, 107.2, 91.8, 122.9, 192.1, 247.4],
+  },
+  {
+    name: "Mark Zuckerberg",
+    color: "#ea580c",
+    values: [12.3, 24.7, 34.5, 45.8, 50.0, 72.8, 52.0, 78.4, 103.5, 125.5, 45.6, 128.1, 207.3, 233.3],
+  },
+  {
+    name: "Jensen Huang",
+    color: "#65a30d",
+    values: [null, null, null, null, null, null, null, 5.7, 12.3, 27.0, 13.8, 44.0, 114.4, 154.5],
+  },
+];
+
+const width = 720;
+const height = 420;
+const padding = { top: 28, right: 22, bottom: 58, left: 54 };
+const chartWidth = width - padding.left - padding.right;
+const chartHeight = height - padding.top - padding.bottom;
+const minY = 0;
+const maxY = 650;
+
+const getX = (index: number) =>
+  padding.left + (index / Math.max(years.length - 1, 1)) * chartWidth;
+const getY = (value: number) =>
+  padding.top + ((maxY - value) / (maxY - minY)) * chartHeight;
+
+function buildPath(values: Array<number | null>) {
+  let path = "";
+
+  values.forEach((value, index) => {
+    if (value === null) return;
+    const command = index === 0 || values[index - 1] === null ? "M" : "L";
+    path += `${command} ${getX(index)} ${getY(value)} `;
+  });
+
+  return path.trim();
+}
+
+const plottedSeries = series.map((entry) => ({
+  ...entry,
+  path: buildPath(entry.values),
+  lastPoint: (() => {
+    for (let index = entry.values.length - 1; index >= 0; index -= 1) {
+      const value = entry.values[index];
+      if (value !== null) {
+        return {
+          value,
+          x: getX(index),
+          y: getY(value),
+        };
+      }
+    }
+
+    return null;
+  })(),
+}));
+
+const xTicks = years.filter((year, index) => index % 2 === 0 || index === years.length - 1);
+const yTicks = [0, 150, 300, 450, 600].map((value) => ({
+  label: `$${value}B`,
+  value,
+  y: getY(value),
+}));
+---
+
+<figure class="trillion-race-chart-wrapper">
+  <figcaption class="chart-subtitle">
+    Estimated year-end wealth of selected billionaires
+  </figcaption>
+  <div class="chart-container">
+    <svg
+      aria-labelledby="trillion-race-chart-title trillion-race-chart-desc"
+      class="chart-svg"
+      role="img"
+      viewBox={`0 0 ${width} ${height}`}
+    >
+      <title id="trillion-race-chart-title">
+        Estimated year-end wealth of selected billionaires from 2012 to 2025
+      </title>
+      <desc id="trillion-race-chart-desc">
+        A multi-line chart comparing the wealth trajectories of Elon Musk,
+        Larry Page, Jeff Bezos, Larry Ellison, Mark Zuckerberg and Jensen Huang.
+        Musk rises the fastest and reaches roughly 619 billion dollars in 2025.
+      </desc>
+
+      {yTicks.map((tick) => (
+        <>
+          <line
+            class="grid-line"
+            x1={padding.left}
+            x2={width - padding.right}
+            y1={tick.y}
+            y2={tick.y}
+          />
+          <text class="axis-label" text-anchor="end" x={padding.left - 8} y={tick.y + 4}>
+            {tick.label}
+          </text>
+        </>
+      ))}
+
+      <line
+        class="axis-line"
+        x1={padding.left}
+        x2={padding.left}
+        y1={padding.top}
+        y2={height - padding.bottom}
+      />
+      <line
+        class="axis-line"
+        x1={padding.left}
+        x2={width - padding.right}
+        y1={height - padding.bottom}
+        y2={height - padding.bottom}
+      />
+
+      {xTicks.map((tick) => {
+        const index = years.indexOf(tick);
+        const x = getX(index);
+
+        return (
+          <>
+            <line
+              class="axis-line"
+              x1={x}
+              x2={x}
+              y1={height - padding.bottom}
+              y2={height - padding.bottom + 4}
+            />
+            <text class="axis-label" text-anchor="middle" x={x} y={height - padding.bottom + 22}>
+              {tick}
+            </text>
+          </>
+        );
+      })}
+
+      {plottedSeries.map((entry) => (
+        <>
+          <path
+            d={entry.path}
+            fill="none"
+            pathLength="100"
+            stroke={entry.color}
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="3"
+          />
+          {entry.lastPoint && (
+            <circle
+              cx={entry.lastPoint.x}
+              cy={entry.lastPoint.y}
+              fill={entry.color}
+              r="4"
+              stroke="var(--chart-surface)"
+              stroke-width="1.5"
+            >
+              <title>{`${entry.name}: $${entry.lastPoint.value.toFixed(1)}B in 2025`}</title>
+            </circle>
+          )}
+        </>
+      ))}
+    </svg>
+  </div>
+
+  <ul class="chart-legend" aria-label="Chart legend">
+    {plottedSeries.map((entry) => (
+      <li>
+        <span class="legend-swatch" style={`--swatch:${entry.color}`}></span>
+        <span>{entry.name}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="chart-source">Source: Bloomberg Billionaires Index</p>
+</figure>
+
+<style>
+  .trillion-race-chart-wrapper {
+    --chart-grid: rgba(15, 23, 42, 0.08);
+    --chart-muted: rgba(15, 23, 42, 0.6);
+    --chart-surface: var(--color-surface, #fff);
+    margin: 2rem 0;
+    padding: 1.25rem 1.25rem 0.75rem;
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
+    border-radius: 0.75rem;
+    background: var(--chart-surface);
+  }
+
+  :global(html.dark) .trillion-race-chart-wrapper {
+    --chart-grid: rgba(255, 255, 255, 0.1);
+    --chart-muted: rgba(255, 255, 255, 0.62);
+    --chart-surface: var(--color-surface, #111827);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .trillion-race-chart-wrapper {
+      --chart-grid: rgba(255, 255, 255, 0.1);
+      --chart-muted: rgba(255, 255, 255, 0.62);
+      --chart-surface: var(--color-surface, #111827);
+    }
+  }
+
+  .chart-subtitle {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .chart-container {
+    overflow-x: auto;
+  }
+
+  .chart-svg {
+    width: 100%;
+    height: auto;
+    min-width: 640px;
+    display: block;
+  }
+
+  .grid-line {
+    stroke: var(--chart-grid);
+    stroke-width: 1;
+  }
+
+  .axis-line {
+    stroke: var(--chart-muted);
+    stroke-width: 1;
+  }
+
+  .axis-label {
+    fill: var(--chart-muted);
+    font-size: 12px;
+  }
+
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--chart-muted);
+    font-size: 0.9rem;
+  }
+
+  .chart-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .legend-swatch {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 999px;
+    background: var(--swatch);
+  }
+
+  .chart-source {
+    margin: 0.85rem 0 0;
+    color: var(--chart-muted);
+    font-size: 0.85rem;
+  }
+</style>

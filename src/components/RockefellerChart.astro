@@ -7,31 +7,24 @@ type Point = {
 };
 
 const rawData: RawPoint[] = [
-  ["1900", 42.45], ["1901", null], ["1902", null], ["1903", null], ["1904", null],
-  ["1905", null], ["1906", null], ["1907", null], ["1908", null], ["1909", null],
-  ["1910", 46.65], ["1911", null], ["1912", null], ["1913", 46.63], ["1914", 46.11],
-  ["1915", 46.14], ["1916", 44.46], ["1917", 42], ["1918", 38.43], ["1919", 41.27],
-  ["1920", 36.96], ["1921", 38.13], ["1922", 41.12], ["1923", 36.56], ["1924", 38.61],
-  ["1925", 41.89], ["1926", 43.5], ["1927", 45.87], ["1928", 48.55], ["1929", 48.67],
-  ["1930", 44.17], ["1931", 39.61], ["1932", 39.38], ["1933", 41.5], ["1934", 42.13],
-  ["1935", 41.54], ["1936", 43.96], ["1937", 44.73], ["1938", 40.85], ["1939", 41.9],
-  ["1940", 38.98], ["1941", 35.88], ["1942", 35.38], ["1943", 35.54], ["1944", 32.85],
-  ["1945", 33.01], ["1946", 30.89], ["1947", 29.75], ["1948", 29.2], ["1949", 28.36],
-  ["1950", 29.6], ["1951", 29.14], ["1952", 28.82], ["1953", 27.63], ["1954", 28.23],
-  ["1955", 28.48], ["1956", 28.79], ["1957", 28.42], ["1958", 27.97], ["1959", 28.55],
-  ["1960", 28.54], ["1961", 28.7], ["1962", 28.66], ["1963", 28.34], ["1964", 28.03],
-  ["1965", 27.9], ["1966", 27.77], ["1967", 27.66], ["1968", 29.21], ["1969", 27.38],
-  ["1970", 26.67], ["1971", 26.62], ["1972", 26.44], ["1973", 25.31], ["1974", 24.06],
-  ["1975", 23.7], ["1976", 22.6], ["1977", 22.68], ["1978", 21.79], ["1979", 23.23],
-  ["1980", 23.23], ["1981", 23.89], ["1982", 24.5], ["1983", 23.96], ["1984", 24.16],
-  ["1985", 24.19], ["1986", 24.92], ["1987", 26.57], ["1988", 28.44], ["1989", 28.85],
-  ["1990", 29.05], ["1991", 28.57], ["1992", 29.51], ["1993", 29.06], ["1994", 29.28],
-  ["1995", 29.3], ["1996", 29.65], ["1997", 30.47], ["1998", 31.48], ["1999", 31.81],
-  ["2000", 32.34], ["2001", 32.14], ["2002", 31.47], ["2003", 31.1], ["2004", 31.69],
-  ["2005", 32.32], ["2006", 32.71], ["2007", 33.4], ["2008", 33.99], ["2009", 33.12],
-  ["2010", 34.62], ["2011", 35.28], ["2012", 36.62], ["2013", 35.64], ["2014", 35.83],
-  ["2015", 35.81], ["2016", 35.5], ["2017", 35.48], ["2018", 35.2], ["2019", 34.85],
-  ["2020", 35.13], ["2021", 36.26], ["2022", 34.89], ["2023", 34.78], ["2024", 34.78],
+  ["1900", 200],
+  ["1901", null],
+  ["1902", null],
+  ["1903", null],
+  ["1904", null],
+  ["1905", null],
+  ["1906", null],
+  ["1907", null],
+  ["1908", null],
+  ["1909", null],
+  ["1910", null],
+  ["1911", 814],
+  ["1912", 873],
+  ["1913", 907],
+  ["1914", 904],
+  ["1915", 1282],
+  ["1916", 1482],
+  ["1917", 1163],
 ];
 
 function interpolateSeries(data: RawPoint[]): Point[] {
@@ -60,7 +53,7 @@ function interpolateSeries(data: RawPoint[]): Point[] {
       result.push({
         actual: false,
         label,
-        value: Math.round(interpolatedValue * 100) / 100,
+        value: Math.round(interpolatedValue),
       });
     }
   }
@@ -71,11 +64,11 @@ function interpolateSeries(data: RawPoint[]): Point[] {
 const points = interpolateSeries(rawData);
 const width = 720;
 const height = 360;
-const padding = { bottom: 42, left: 48, right: 16, top: 24 };
+const padding = { bottom: 42, left: 56, right: 16, top: 24 };
 const chartWidth = width - padding.left - padding.right;
 const chartHeight = height - padding.top - padding.bottom;
-const minY = 20;
-const maxY = 52;
+const minY = 0;
+const maxY = 1600;
 const xStep = chartWidth / Math.max(points.length - 1, 1);
 const baselineY = padding.top + chartHeight;
 
@@ -95,37 +88,37 @@ const linePath = chartPoints
   .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
   .join(" ");
 const areaPath = `${linePath} L ${lastPoint.x} ${baselineY} L ${firstPoint.x} ${baselineY} Z`;
-const xTicks = chartPoints.filter(
-  (point, index) => point.label.endsWith("0") || index === chartPoints.length - 1,
-);
-const yTicks = [20, 28, 36, 44, 52].map((value) => ({
+const xTicks = chartPoints.filter((point, index) => {
+  const year = Number(point.label);
+  return year % 5 === 0 || index === chartPoints.length - 1;
+});
+const yTicks = [0, 400, 800, 1200, 1600].map((value) => ({
+  label: `$${value}M`,
   value,
   y: getY(value),
 }));
 ---
 
-<figure class="inequality-chart-wrapper">
-  <figcaption class="chart-subtitle">
-    Estimated share of all US wealth held by the top 1%
-  </figcaption>
+<figure class="rockefeller-chart-wrapper">
+
   <div class="chart-container">
     <svg
-      aria-labelledby="inequality-chart-title inequality-chart-desc"
+      aria-labelledby="rockefeller-chart-title rockefeller-chart-desc"
       class="chart-svg"
       role="img"
       viewBox={`0 0 ${width} ${height}`}
     >
-      <title id="inequality-chart-title">
-        Estimated share of US wealth held by the top 1% from 1900 to 2024
+      <title id="rockefeller-chart-title">
+        John D. Rockefeller Senior's estimated net worth from 1900 to 1917
       </title>
-      <desc id="inequality-chart-desc">
-        A line chart showing the top 1%'s wealth share staying above 40% in the
-        early 20th century, falling below 25% in the 1970s, and rising back to
-        the mid-30s by 2024.
+      <desc id="rockefeller-chart-desc">
+        A line chart showing Rockefeller's estimated net worth rising from about
+        200 million dollars in 1900 to a peak above 1.4 billion in 1916 before
+        easing in 1917.
       </desc>
 
       <defs>
-        <linearGradient id="inequality-chart-fill" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id="rockefeller-chart-fill" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stop-color="var(--chart-fill-start)" />
           <stop offset="100%" stop-color="var(--chart-fill-end)" />
         </linearGradient>
@@ -141,7 +134,7 @@ const yTicks = [20, 28, 36, 44, 52].map((value) => ({
             y2={tick.y}
           />
           <text class="axis-label" text-anchor="end" x={padding.left - 8} y={tick.y + 4}>
-            {tick.value}%
+            {tick.label}
           </text>
         </>
       ))}
@@ -176,7 +169,7 @@ const yTicks = [20, 28, 36, 44, 52].map((value) => ({
         </>
       ))}
 
-      <path d={areaPath} fill="url(#inequality-chart-fill)" />
+      <path d={areaPath} fill="url(#rockefeller-chart-fill)" />
       <path
         class="line-path"
         d={linePath}
@@ -193,29 +186,29 @@ const yTicks = [20, 28, 36, 44, 52].map((value) => ({
           cx={point.x}
           cy={point.y}
           fill="var(--chart-line)"
-          r="2.5"
+          r="4"
           stroke="var(--chart-surface)"
           stroke-width="1.5"
         >
-          <title>{`${point.label}: ${point.value.toFixed(1)}%`}</title>
+          <title>{`${point.label}: $${point.value}M`}</title>
         </circle>
       ))}
     </svg>
   </div>
   <p class="chart-note">
-    Line interpolates through early years where published annual estimates are sparse.
+    Dots mark years with explicit historical estimates; intervening years are smoothed between them.
   </p>
   <p class="chart-source">
-    Source: World Inequality Database; adults, equal split of net personal wealth
+    Source: Bloomberg analysis based on historical records, including donation tallies and stock performance; Standard Oil data provided by Finaeon, Inc.
   </p>
 </figure>
 
 <style>
-  .inequality-chart-wrapper {
-    --chart-fill-end: rgba(37, 99, 235, 0);
-    --chart-fill-start: rgba(37, 99, 235, 0.16);
+  .rockefeller-chart-wrapper {
+    --chart-fill-end: rgba(180, 83, 9, 0);
+    --chart-fill-start: rgba(180, 83, 9, 0.14);
     --chart-grid: rgba(15, 23, 42, 0.08);
-    --chart-line: #2563eb;
+    --chart-line: #b45309;
     --chart-muted: rgba(15, 23, 42, 0.6);
     --chart-surface: var(--color-surface, #fff);
     margin: 2rem 0;
@@ -225,21 +218,21 @@ const yTicks = [20, 28, 36, 44, 52].map((value) => ({
     background: var(--chart-surface);
   }
 
-  :global(html.dark) .inequality-chart-wrapper {
-    --chart-fill-end: rgba(96, 165, 250, 0);
-    --chart-fill-start: rgba(96, 165, 250, 0.24);
+  :global(html.dark) .rockefeller-chart-wrapper {
+    --chart-fill-end: rgba(245, 158, 11, 0);
+    --chart-fill-start: rgba(245, 158, 11, 0.24);
     --chart-grid: rgba(255, 255, 255, 0.1);
-    --chart-line: #60a5fa;
+    --chart-line: #f59e0b;
     --chart-muted: rgba(255, 255, 255, 0.62);
     --chart-surface: var(--color-surface, #111827);
   }
 
   @media (prefers-color-scheme: dark) {
-    .inequality-chart-wrapper {
-      --chart-fill-end: rgba(96, 165, 250, 0);
-      --chart-fill-start: rgba(96, 165, 250, 0.24);
+    .rockefeller-chart-wrapper {
+      --chart-fill-end: rgba(245, 158, 11, 0);
+      --chart-fill-start: rgba(245, 158, 11, 0.24);
       --chart-grid: rgba(255, 255, 255, 0.1);
-      --chart-line: #60a5fa;
+      --chart-line: #f59e0b;
       --chart-muted: rgba(255, 255, 255, 0.62);
       --chart-surface: var(--color-surface, #111827);
     }
