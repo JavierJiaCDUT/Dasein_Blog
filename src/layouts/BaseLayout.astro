@@ -8,7 +8,7 @@ import { getSite } from '../utils/consts';
 interface Props {
 	title?: string;
 	description?: string;
-	image?: ImageMetadata;
+	image?: ImageMetadata | string;
 }
 
 const site = await getSite();
@@ -18,7 +18,7 @@ const { title = site.author.name, description, image } = Astro.props;
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead title={title} description={description} image={image} />
+        <BaseHead title={title} description={description || site.author?.bio || ''} image={image} />
     </head>
     <body>
         <Header />
