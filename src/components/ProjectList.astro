@@ -31,6 +31,7 @@ interface RawProject {
     description?: string;
     link?: string;
     image?: any;
+    heroImage?: any;
 
     // ...or the content collection shape:
     data?: {
@@ -38,6 +39,7 @@ interface RawProject {
         description?: string;
         link?: string;
         image?: any;
+        heroImage?: any;
     };
 }
 
@@ -107,7 +109,7 @@ const baseUrl =
                             <Card
                                 title={p.title}
                                 href={href}
-                                image={p.image}
+                                image={p.heroImage || p.image}
                                 imageAlt={p.title}
                                 description={p.description}
                                 variant="project"

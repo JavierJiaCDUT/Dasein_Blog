@@ -7,7 +7,9 @@ export async function getSite() {
 	// Try to read the `site` entry and fallback to constants
 	const author = await getEntry('site', 'author');
 	const social = await getEntry('site', 'social');
+	const title = await getEntry('site', 'title');
 	return {
+		title: title?.data?.text || author?.data?.name || 'Dasein',
 		author: author?.data,
 		social: social?.data,
 	};

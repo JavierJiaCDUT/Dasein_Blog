@@ -1,26 +1,7 @@
 ---
 import Search from "astro-pagefind/components/Search";
 import { Icon } from 'astro-icon/components';
-
-export interface Props {
-  class?: string;
-}
-const { class: className = '' } = Astro.props as Props;
 ---
-
-<button
-	type="button"
-	id="search-toggle"
-	aria-haspopup="dialog"
-	aria-controls="search-modal"
-	aria-expanded="false"
-	class={`search-trigger ${className}`}
->
-	<span class="sr-only">Open search dialog</span>
-	<span class="search-trigger__icon" aria-hidden="true">
-		Search
-	</span>
-</button>
 
 <div
 	id="search-modal"
@@ -52,7 +33,6 @@ const { class: className = '' } = Astro.props as Props;
 
 <script is:inline>
 const searchModal = document.getElementById('search-modal');
-const searchToggle = document.getElementById('search-toggle');
 const searchClose = document.getElementById('search-close');
 const searchBackdrop = document.querySelector('[data-close="search"]');
 
@@ -66,7 +46,13 @@ const setSearchVisibility = (isOpen) => {
 	searchModal.classList.toggle('is-open', isOpen);
 	searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 	searchModal.toggleAttribute('inert', !isOpen);
-	if (searchToggle) searchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+	
+	// Toggle aria-expanded on all search triggers
+	const searchTriggers = document.querySelectorAll('.search-trigger');
+	searchTriggers.forEach(trigger => {
+		trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+	});
+	
 	document.body.classList.toggle('search-open', isOpen);
 };
 
@@ -89,7 +75,14 @@ const closeSearch = () => {
 	setSearchVisibility(false);
 };
 
-if (searchToggle) searchToggle.addEventListener('click', openSearch);
+// Bind to all elements with class 'search-trigger'
+document.addEventListener('click', (event) => {
+	const trigger = event.target.closest('.search-trigger');
+	if (trigger) {
+		openSearch();
+	}
+});
+
 if (searchClose) searchClose.addEventListener('click', closeSearch);
 if (searchBackdrop) searchBackdrop.addEventListener('click', closeSearch);
 
@@ -107,7 +100,7 @@ window.addEventListener('keydown', (event) => {
 	inset: 0;
 	width: 100vw;
 	height: 100vh;
-	z-index: 80;
+	z-index: 1100;
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
