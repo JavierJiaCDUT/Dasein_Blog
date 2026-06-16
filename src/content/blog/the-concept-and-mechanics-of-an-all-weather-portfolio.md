@@ -1,3 +1,13 @@
+---
+title: 'The Concept and Mechanics of an All Weather Portfolio'
+description: 'Ray Dalio shares the investment principles and financial engineering behind the All Weather Portfolio.'
+pubDate: 2026-06-17
+tags:
+  - finance
+  - investing
+  - principles
+---
+
 I am at a stage in life where my main objective is to pass along to others the principles I have learned over the last 60 years that have helped me and that I think can help others. I believe that some of the most important investment principles I can pass along are about what an “All Weather Portfolio” is and how to build such a portfolio. I think these principles are especially valuable during risky times like now.
 
 我正处在人生的一个阶段：我的主要目标，是把过去 60 年里我所学到、对我有帮助、并且我认为也能帮助他人的那些原则传递下去。我相信，我能够传授的最重要的投资原则之一，就是关于什么是“全天候投资组合（All Weather Portfolio）”，以及如何构建这样一种投资组合。我认为，这些原则在像当下这样充满风险的时期尤其宝贵。
