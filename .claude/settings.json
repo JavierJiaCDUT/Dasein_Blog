@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(curl:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Read(//private/tmp/claude-501/-Users-javierjia-Documents-GitHub-Dasein_Blog/28bb18b3-9b72-4fc0-84f0-e833f662e7e5/tasks/**)",
+      "Bash(bun run *)"
     ]
   }
 }

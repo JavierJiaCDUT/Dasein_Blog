@@ -24,6 +24,7 @@ const site = await getSite();
 					image={featured.data.heroImage}
 					imageAlt={featured.data.title}
 					variant="post"
+					featured={true}
 				>
 					{featured.data.tags.length > 0 && (
 						<div class="flex flex-wrap gap-2 pt-1 text-sm text-muted">

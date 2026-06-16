@@ -13,7 +13,9 @@ bun run preview      # Preview production build
 
 ## Architecture
 
-**Astro 5 blog** with Tailwind CSS 4, MDX, and Pagefind search.
+**Astro 6 blog** with Tailwind CSS 4, MDX, and Pagefind search.
+
+Site URL `https://blog.javierjia.us.kg`, served at root (`base: "/"`). Package manager is **bun**.
 
 ### Content Collections (src/content.config.ts)
 
@@ -50,6 +52,8 @@ CSS variables in `src/styles/global.css`:
 - `src/site-config.yml` → Author name, bio, social links
 - `src/utils/consts.ts` → `getSite()` helper to read site config
 
+**heroImage type**: `BlogPost`/`ProjectPost` layouts expect `ImageMetadata` (a `src/assets/...` import). `BaseLayout` accepts `ImageMetadata | string`, so a plain string path (e.g. a `public/` URL) also works for the OG/meta image.
+
 ## Adding Content
 
 Blog post frontmatter:
@@ -72,13 +76,13 @@ tags: [tag1, tag2]
 | 文章内联图 | `public/blog/<post-name>/` | markdown: `![alt](/blog/<post-name>/fig.jpg)` |
 
 **推荐尺寸**（2倍图适配 Retina）：
-- 封面图：2040 × 1020 px（2:1 比例）
+- 封面图：3200 × 1600 px（2:1 比例）—— 确保 featured 全宽卡片在 Retina 屏幕下清晰
 - 内联图：宽度 ≤ 1792 px，高度自由
 
 **注意**：
 - `src/assets/` 图片会被 Astro 优化（压缩、格式转换）
 - `public/` 图片原样复制，不处理
-- `public/` 内的文件在 markdown 中用**绝对路径**引用（以 `/` 开头，不含 `/dasein`）
+- `public/` 内的文件在 markdown 中用**绝对路径**引用（以 `/` 开头，例如 `/blog/...`；站点 base 为 `/`，无子路径前缀）
 - `src/assets/` 内的文件在 frontmatter 中用**相对路径**引用（`../../assets/...`）
 - 不要在两个位置放重复文件
 - 格式优先使用 `.jpg` 或 `.webp`
@@ -103,19 +107,17 @@ tags: [tag1, tag2]
 
 ## Deployment
 
-Static output to `dist/`. Base path `/dasein`.
-
-### GitHub Pages
-
-已配置好，push 到 main 即可。
+Static output to `dist/`, served at root (`base: "/"`). Primary target is **Cloudflare Workers**.
 
 ### Cloudflare Workers
 
 ```bash
-npm run build && npx wrangler deploy
+bun run build && npx wrangler deploy
 ```
 
-配置文件：`wrangler.jsonc`（指定 `assets.directory: "./dist"`）
+配置文件：`wrangler.jsonc`（`name: "javierjia-blog"`，`assets.directory: "./dist"`）。
+
+> 注意：仓库当前没有 `.github/workflows/` CI 配置，部署需手动执行上面的命令（不是 push 到 main 自动发布）。
 
 ### Git Push 大文件问题
 

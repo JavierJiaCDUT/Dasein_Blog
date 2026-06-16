@@ -11,9 +11,14 @@ interface Props {
 		image?: ImageMetadata | string;
 	imageAlt?: string;
 	eyebrow?: string;
+	featured?: boolean;
 }
 
-const { title, href, description, date, image, imageAlt = '', eyebrow } = Astro.props as Props;
+const { title, href, description, date, image, imageAlt = '', eyebrow, featured = false } = Astro.props as Props;
+
+const imgWidth = featured ? 1600 : 800;
+const imgHeight = Math.round(imgWidth * 7 / 12);
+const sizes = featured ? '95vw' : '(max-width: 768px) 95vw, 47vw';
 
 const baseDate = typeof date === 'string' ? new Date(date) : date;
 
@@ -40,6 +45,9 @@ const aProps = { href, 'aria-label': `Ver ${title}`, ...(isExternal ? { rel: 'no
 					<Image
 						src={image}
 						alt={imageAlt}
+						width={imgWidth}
+						height={imgHeight}
+						sizes={sizes}
 						loading="lazy"
 						class="lg:col-span-full aspect-12/7 object-cover object-top w-full transition duration-400 group-hover:scale-[1.02]"
 					/>
