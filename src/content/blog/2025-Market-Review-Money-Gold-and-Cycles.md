@@ -1,7 +1,20 @@
 ---
+type: Article
 title: '2025 Market Review: Money, Gold, and Cycles'
 description: '基于达利欧式宏观逻辑的2025年全球市场深度复盘，分析货币价值、财富转移与大周期的关系'
 pubDate: 2026-02-02
+updatedDate: 2026-07-27
+author: "Ray Dalio"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translationMethod: "AI-Assisted"
+originalPubDate: 2026-01-05
+resource: "https://www.linkedin.com/pulse/2025-ray-dalio-kaf8e"
+sources:
+  - id: ray-dalio-2025
+    resource: "https://www.linkedin.com/pulse/2025-ray-dalio-kaf8e"
+    title: "2025"
+    author: "human:ray-dalio"
 heroImage: ../../assets/blog/2025-market-review/G96Gz8WXUAApbsW.jpeg
 tags: [Macro, Gold, Market]
 ---

@@ -21,8 +21,8 @@ Site URL `https://javierjia-blog.javier-b09.workers.dev`, served at root (`base:
 
 | Collection | Source | Schema |
 |------------|--------|--------|
-| `blog` | `src/content/blog/*.{md,mdx}` | Base publishing fields plus optional OKF attribution fields |
-| `projects` | `src/content/projects/*.{md,mdx}` | Same as blog |
+| `blog` | `src/content/blog/*.{md,mdx}` | Publishing fields plus required authorship/type fields and conditional OKF provenance |
+| `projects` | `src/content/projects/*.{md,mdx}` | title, description, dates, image, tags, draft |
 | `cv` | `src/content/cv.yml` | Sections with heading, items[] |
 | `site` | `src/site-config.yml` | author info, social links |
 
@@ -59,37 +59,45 @@ CSS variables in `src/styles/global.css`:
 Blog post frontmatter:
 ```yaml
 ---
+type: Article
 title: "Post Title"
 description: "Brief description"
 pubDate: 2025-01-15
 updatedDate: 2025-01-20  # optional
+author: "Jia XinYuan"
+contentType: Original
+language: [en]
 heroImage: ../../assets/blog/post-name/hero.jpg  # optional
-tags: [tag1, tag2]
+tags: [Topic One, Topic Two]
+draft: false
 ---
 ```
 
-### External Translations and Reposts
+### Attribution and Provenance
 
-Use the following Open Knowledge Format (OKF) v0.2-compatible extension for translated, reposted, summarized, or externally authored articles. Original posts only need the base publishing fields above.
+Every blog post must declare its authorship and content type. Use the following Open Knowledge Format (OKF) v0.2-compatible extension for translated, reposted, summarized, or externally authored articles.
 
 ```yaml
 ---
-type: Article
-title: "Article Title"
-description: "One sentence describing the article's core value."
-pubDate: 2026-06-17
+type: "Research Summary"
+title: "Research Overview"
+description: "One sentence describing the research's core value."
+pubDate: 2026-07-27
 updatedDate: 2026-07-27
-author: "Original Author"
+author: "Research Authors"
 contentType: "Bilingual Translation"
 language: [en, zh-CN]
-translator: "Translation Tool or Person"
-originalPubDate: 2026-03-23
-resource: "https://example.com/original-article"
+translationMethod: "AI-Assisted"
+originalPubDate: 2026-05-21
+resource: "https://example.com/directly-adapted-overview"
 sources:
-  - id: original-source
-    resource: "https://example.com/original-article"
-    title: "Original Article Title"
-    author: "human:original-author"
+  - id: adapted-overview
+    resource: "https://example.com/directly-adapted-overview"
+    title: "Overview used for this post"
+  - id: primary-paper
+    resource: "https://example.com/primary-paper"
+    title: "Original research paper"
+    author: "Research Authors"
 tags: [Topic One, Topic Two, Topic Three]
 draft: false
 ---
@@ -97,16 +105,33 @@ draft: false
 
 Rules:
 
-- Keep `title`, `description`, `pubDate`, `tags`, and `draft` as the blog publishing fields.
-- Use `type: Article`; use `contentType` to distinguish `Original`, `Translation`, `Bilingual Translation`, `Repost`, `Summary`, or `Commentary`.
-- `author` names the original author. `translator` names the person, tool, or model that produced the translation.
+- `type`, `author`, `contentType`, and `language` are required for every blog post.
+- Use a descriptive `type` such as `Article`, `Research Summary`, or `Guide`.
+- Use `contentType` to distinguish `Original`, `Translation`, `Bilingual Translation`, `Repost`, `Summary`, or `Commentary`.
+- `author` names the local author for original work and the source author or research team for externally sourced work.
 - Use BCP 47 language tags such as `en` and `zh-CN`.
-- `resource` is the canonical original article URL. Do not add a duplicate `sourceUrl`.
-- `sources` records OKF provenance. Within `sources`, use `human:<id>` for a person when the identity is known.
-- `originalPubDate` records the source publication date. `pubDate` and `updatedDate` retain their normal site meanings.
+- Translated content must declare `translationMethod` as `AI-Assisted`, `Human`, or `Hybrid`.
+- Use `translationMethod: AI-Assisted` for AI-assisted translation. Do not expose a specific model name in public metadata.
+- `translator` is optional and is only for a named human translator or translation organization. `Human` and `Hybrid` translations must name one.
+- `resource` points to the text directly translated, reposted, or adapted. Do not add a duplicate `sourceUrl`.
+- `sources` records the complete provenance chain. Put the directly adapted source first and the primary article, paper, or project page second.
+- `originalPubDate` records the publication date of `resource`. `pubDate` and `updatedDate` retain their normal site meanings.
+- `Translation`, `Bilingual Translation`, `Repost`, and `Summary` require `resource`, `sources`, and `originalPubDate`.
+- Do not infer authors, translators, dates, or sources from filenames or commit history. Verify them before publishing.
+- Write tags in title case.
 - Do not add a separate `timestamp`; `updatedDate` is the site's update field.
 - Add `related` only when it points to real, directly related internal content.
-- Attribution fields must remain optional in `src/content.config.ts`. When adding a new attribution field, update both the schema and `BlogPost.astro` so meaningful reader-facing information is visible.
+- When adding an attribution field, update both `src/content.config.ts` and `BlogPost.astro` so the rule is validated and meaningful reader-facing information is visible.
+
+Workflow examples:
+
+| Workflow | Required attribution fields |
+|----------|-----------------------------|
+| Original | `contentType: Original`; local `author`; no external source fields required |
+| AI-assisted translation | `contentType: Bilingual Translation`; `translationMethod: AI-Assisted`; source provenance required |
+| Human translation | `contentType: Translation`; `translationMethod: Human`; named `translator`; source provenance required |
+| Hybrid translation | `contentType: Bilingual Translation`; `translationMethod: Hybrid`; named human reviewer in `translator`; source provenance required |
+| Repost | `contentType: Repost`; `resource`, `sources`, and `originalPubDate`; no translation fields unless translated |
 
 ### Image Placement
 

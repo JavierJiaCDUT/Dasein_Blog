@@ -1,7 +1,23 @@
 ---
+type: "Research Summary"
 title: "s1: Simple test-time scaling"
 description: "Researchers at Stanford, UW, and AI2 developed `s1-32B`, an open-source model that achieves state-of-the-art reasoning performance and clear test-time scaling on challenging benchmarks"
 pubDate: 2026-02-04
+updatedDate: 2026-07-27
+author: "Niklas Muennighoff, Zitong Yang, Weijia Shi, Xiang Lisa Li, Li Fei-Fei, Hannaneh Hajishirzi, Luke Zettlemoyer, Percy Liang, Emmanuel Candès, and Tatsunori Hashimoto"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translationMethod: "AI-Assisted"
+originalPubDate: 2025-03-01
+resource: "https://www.alphaxiv.org/overview/2501.19393v3"
+sources:
+  - id: alphaxiv-overview
+    resource: "https://www.alphaxiv.org/overview/2501.19393v3"
+    title: "alphaXiv overview: s1"
+  - id: arxiv-paper
+    resource: "https://arxiv.org/abs/2501.19393"
+    title: "arXiv paper: s1"
+    author: "Niklas Muennighoff, Zitong Yang, Weijia Shi, Xiang Lisa Li, Li Fei-Fei, Hannaneh Hajishirzi, Luke Zettlemoyer, Percy Liang, Emmanuel Candès, and Tatsunori Hashimoto"
 heroImage: ../../assets/blog/s1/S1_Hero.jpeg
 tags: [AI, LLM, Research]
 ---

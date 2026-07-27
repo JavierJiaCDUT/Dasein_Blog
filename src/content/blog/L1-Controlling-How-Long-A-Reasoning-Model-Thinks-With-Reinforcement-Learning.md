@@ -1,7 +1,23 @@
 ---
+type: "Research Summary"
 title: "L1: Controlling How Long A Reasoning Model Thinks With Reinforcement Learning"
 description: "Researchers at Carnegie Mellon University introduced Length Controlled Policy Optimization (LCPO), an RL-based method that trains large language models to precisely control the length of their reasoning steps."
 pubDate: "2026-02-04"
+updatedDate: 2026-07-27
+author: "Pranjal Aggarwal and Sean Welleck"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translationMethod: "AI-Assisted"
+originalPubDate: 2025-10-03
+resource: "https://www.alphaxiv.org/overview/2503.04697v2"
+sources:
+  - id: alphaxiv-overview
+    resource: "https://www.alphaxiv.org/overview/2503.04697v2"
+    title: "alphaXiv overview: L1"
+  - id: arxiv-paper
+    resource: "https://arxiv.org/abs/2503.04697"
+    title: "arXiv paper: L1"
+    author: "Pranjal Aggarwal and Sean Welleck"
 heroImage: ../../assets/blog/L1/L1_Hero.jpeg
 tags: [AI, LLM, Research]
 ---

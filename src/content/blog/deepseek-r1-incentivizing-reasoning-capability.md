@@ -1,7 +1,23 @@
 ---
+type: "Research Summary"
 title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"
 description: "DeepSeek-AI developed DeepSeek-R1, an LLM demonstrating that sophisticated reasoning capabilities can emerge through pure outcome-based reinforcement learning without reliance on human-annotated reasoning trajectories. "
 pubDate: "Jan 29 2026"
+updatedDate: 2026-07-27
+author: "DeepSeek-AI"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translationMethod: "AI-Assisted"
+originalPubDate: 2026-01-04
+resource: "https://www.alphaxiv.org/overview/2501.12948v2"
+sources:
+  - id: alphaxiv-overview
+    resource: "https://www.alphaxiv.org/overview/2501.12948v2"
+    title: "alphaXiv overview: DeepSeek-R1"
+  - id: arxiv-paper
+    resource: "https://arxiv.org/abs/2501.12948"
+    title: "arXiv paper: DeepSeek-R1"
+    author: "DeepSeek-AI"
 heroImage: ../../assets/blog/deepseek-r1/R1_Hero.jpeg
 tags: [AI, LLM, Research]
 ---

@@ -7,7 +7,7 @@ updatedDate: 2026-07-27
 author: "Ray Dalio"
 contentType: "Bilingual Translation"
 language: [en, zh-CN]
-translator: "GLM-5.2"
+translationMethod: "AI-Assisted"
 originalPubDate: 2026-03-23
 resource: "https://www.linkedin.com/pulse/concept-mechanics-all-weather-portfolio-ray-dalio-hfiee"
 sources:

@@ -1,7 +1,23 @@
 ---
+type: "Research Summary"
 title: "Scalable Chain of Thoughts via Elastic Reasoning"
 description: "Salesforce AI Research developed 'Elastic Reasoning,' a framework that enables Large Reasoning Models (LRMs) to operate effectively under strict output length constraints."
 pubDate: 2026-02-11
+updatedDate: 2026-07-27
+author: "Yuhui Xu, Hanze Dong, Lei Wang, Doyen Sahoo, Junnan Li, and Caiming Xiong"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translationMethod: "AI-Assisted"
+originalPubDate: 2025-05-21
+resource: "https://www.alphaxiv.org/overview/2505.05315v2"
+sources:
+  - id: alphaxiv-overview
+    resource: "https://www.alphaxiv.org/overview/2505.05315v2"
+    title: "alphaXiv overview: Scalable Chain of Thoughts via Elastic Reasoning"
+  - id: arxiv-paper
+    resource: "https://arxiv.org/abs/2505.05315"
+    title: "arXiv paper: Scalable Chain of Thoughts via Elastic Reasoning"
+    author: "Yuhui Xu, Hanze Dong, Lei Wang, Doyen Sahoo, Junnan Li, and Caiming Xiong"
 heroImage: ../../assets/blog/Scalable-Chain-of-Thoughts-via-Elastic-Reasoning/Scalable_Hero.jpeg
 tags: [AI, LLM, Research]
 ---
