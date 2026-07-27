@@ -14,7 +14,7 @@ import rehypeKatex from "rehype-katex";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://blog.javierjia.us.kg",
+  site: "https://javierjia-blog.javier-b09.workers.dev",
   base: "/",
   integrations: [mdx(), sitemap(), pagefind(), icon()],
 

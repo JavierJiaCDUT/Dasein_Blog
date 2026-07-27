@@ -15,7 +15,7 @@ bun run preview      # Preview production build
 
 **Astro 6 blog** with Tailwind CSS 4, MDX, and Pagefind search.
 
-Site URL `https://blog.javierjia.us.kg`, served at root (`base: "/"`). Package manager is **bun**.
+Site URL `https://javierjia-blog.javier-b09.workers.dev`, served at root (`base: "/"`). Package manager is **bun**.
 
 ### Content Collections (src/content.config.ts)
 
