@@ -9,10 +9,11 @@ interface Props {
 	title?: string;
 	description?: string;
 	image?: ImageMetadata | string;
+	searchable?: boolean;
 }
 
 const site = await getSite();
-const { title = site.author.name, description, image } = Astro.props;
+const { title = site.author.name, description, image, searchable = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,9 +21,9 @@ const { title = site.author.name, description, image } = Astro.props;
     <head>
         <BaseHead title={title} description={description || site.author?.bio || ''} image={image} />
     </head>
-    <body>
+    <body data-pagefind-ignore={searchable ? undefined : 'all'}>
         <Header />
-        <main class="content-shell">
+        <main class="content-shell" data-pagefind-body={searchable ? true : undefined}>
             <slot />
         </main>
         <Footer />

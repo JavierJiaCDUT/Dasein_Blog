@@ -22,15 +22,13 @@ const sizes = featured ? '95vw' : '(max-width: 768px) 95vw, 47vw';
 
 const baseDate = typeof date === 'string' ? new Date(date) : date;
 
-const articleClass = 'group relative grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-start p-5 transition duration-300 ease-in-out hover:-translate-y-1 focus-within:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border';
+const articleClass = 'group relative grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-start p-5 transition duration-300 ease-in-out hover:-translate-y-1 focus-within:-translate-y-1 focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-border';
 
 const isExternal = /^https?:\/\//.test(href) || href.startsWith('//');
-const aProps = { href, 'aria-label': `Ver ${title}`, ...(isExternal ? { rel: 'noopener noreferrer' } : {}) };
+const aProps = { href, ...(isExternal ? { rel: 'noopener noreferrer' } : {}) };
 ---
 
-<article class={articleClass} data-href={href} role="link" tabindex="0" onclick="if(!event.target.closest('a,button,input,textarea,select,details,[role=button]')){location.href=this.dataset.href}" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a,button,input,textarea,select,details,[role=button]')){location.href=this.dataset.href}">
-
-		<a class="sr-only" {...aProps}>Ver {title}</a>
+<article class={articleClass}>
 
 		{image && (
 			<figure class="lg:col-span-full relative overflow-hidden bg-[color-mix(in_oklab,var(--color-ink)_4%,var(--color-surface))]">
@@ -58,7 +56,9 @@ const aProps = { href, 'aria-label': `Ver ${title}`, ...(isExternal ? { rel: 'no
 		<div class="lg:col-span-2">
 			{eyebrow && <p class="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">{eyebrow}</p>}
 			<h3 class="text-sm 2xl:text-xl text-[color:var(--color-primary)] font-bold uppercase">
-				<span class="relative z-10">{title}</span>
+				<a class="card-primary-link" {...aProps}>
+					<span class="relative z-10">{title}</span>
+				</a>
 			</h3>
 
 			{description && <p class="text-xs 2xl:text-lg mt-1 text-[color-mix(in_srgb,var(--color-primary)_70%,var(--color-text-light)_30%)]">{description}</p>}
@@ -76,3 +76,11 @@ const aProps = { href, 'aria-label': `Ver ${title}`, ...(isExternal ? { rel: 'no
 			<slot />
 		</div>
 </article>
+
+<style>
+	.card-primary-link::after {
+		position: absolute;
+		inset: 0;
+		content: '';
+	}
+</style>
