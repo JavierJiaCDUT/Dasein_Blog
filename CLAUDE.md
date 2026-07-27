@@ -21,7 +21,7 @@ Site URL `https://javierjia-blog.javier-b09.workers.dev`, served at root (`base:
 
 | Collection | Source | Schema |
 |------------|--------|--------|
-| `blog` | `src/content/blog/*.{md,mdx}` | title, description, pubDate, updatedDate?, heroImage?, tags[], draft? |
+| `blog` | `src/content/blog/*.{md,mdx}` | Base publishing fields plus optional OKF attribution fields |
 | `projects` | `src/content/projects/*.{md,mdx}` | Same as blog |
 | `cv` | `src/content/cv.yml` | Sections with heading, items[] |
 | `site` | `src/site-config.yml` | author info, social links |
@@ -67,6 +67,46 @@ heroImage: ../../assets/blog/post-name/hero.jpg  # optional
 tags: [tag1, tag2]
 ---
 ```
+
+### External Translations and Reposts
+
+Use the following Open Knowledge Format (OKF) v0.2-compatible extension for translated, reposted, summarized, or externally authored articles. Original posts only need the base publishing fields above.
+
+```yaml
+---
+type: Article
+title: "Article Title"
+description: "One sentence describing the article's core value."
+pubDate: 2026-06-17
+updatedDate: 2026-07-27
+author: "Original Author"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translator: "Translation Tool or Person"
+originalPubDate: 2026-03-23
+resource: "https://example.com/original-article"
+sources:
+  - id: original-source
+    resource: "https://example.com/original-article"
+    title: "Original Article Title"
+    author: "human:original-author"
+tags: [Topic One, Topic Two, Topic Three]
+draft: false
+---
+```
+
+Rules:
+
+- Keep `title`, `description`, `pubDate`, `tags`, and `draft` as the blog publishing fields.
+- Use `type: Article`; use `contentType` to distinguish `Original`, `Translation`, `Bilingual Translation`, `Repost`, `Summary`, or `Commentary`.
+- `author` names the original author. `translator` names the person, tool, or model that produced the translation.
+- Use BCP 47 language tags such as `en` and `zh-CN`.
+- `resource` is the canonical original article URL. Do not add a duplicate `sourceUrl`.
+- `sources` records OKF provenance. Within `sources`, use `human:<id>` for a person when the identity is known.
+- `originalPubDate` records the source publication date. `pubDate` and `updatedDate` retain their normal site meanings.
+- Do not add a separate `timestamp`; `updatedDate` is the site's update field.
+- Add `related` only when it points to real, directly related internal content.
+- Attribution fields must remain optional in `src/content.config.ts`. When adding a new attribution field, update both the schema and `BlogPost.astro` so meaningful reader-facing information is visible.
 
 ### Image Placement
 

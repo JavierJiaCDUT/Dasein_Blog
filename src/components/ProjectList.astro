@@ -20,9 +20,7 @@
  * - Renders the same markup/styling as the original index Projects section.
  * - Link targets to external URLs get `target="_blank"` and `rel="noopener noreferrer"`.
  */
-import { Image } from "astro:assets";
 import Card from "./Card.astro";
-import { getCollection } from 'astro:content';
 import { withBase } from '../utils/slugify';
 
 interface RawProject {
@@ -65,13 +63,6 @@ function getProjectData(item: RawProject) {
 
 function isExternal(href?: string) {
     return typeof href === "string" && /^https?:\/\//i.test(href);
-}
-
-if (items.length === 0) {
-    console.warn('[ProjectList] No items provided; fetching from "projects" collection.');
-    items = items.concat(await getCollection("projects")).sort(
-        (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-    );
 }
 
 const visibleItems = typeof limit === "number" ? items.slice(0, limit) : items;

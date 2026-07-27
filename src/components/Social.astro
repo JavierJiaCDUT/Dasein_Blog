@@ -2,7 +2,10 @@
 import { getSite } from '../utils/consts';
 
 const site = await getSite();
-const social: Array<{ id: string; label: string; href: string }> = (site.social || []) as Array<{ id: string; label: string; href: string }>;
+const social: Array<{ id: string; label: string; href: string }> = ((site.social || []) as Array<{ id: string; label: string; href: string }>).filter((item) => {
+  const href = item.href?.trim();
+  return Boolean(href && href !== '#' && href !== '#_' && href !== 'mailto:');
+});
 
 export interface Props {
   heading?: string;

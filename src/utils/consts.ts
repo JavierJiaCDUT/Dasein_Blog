@@ -9,7 +9,7 @@ export async function getSite() {
 	const social = await getEntry('site', 'social');
 	const title = await getEntry('site', 'title');
 	return {
-		title: title?.data?.text || author?.data?.name || 'Dasein',
+		title: title?.data?.text || author?.data?.name || 'Javier Jia',
 		author: author?.data,
 		social: social?.data,
 	};

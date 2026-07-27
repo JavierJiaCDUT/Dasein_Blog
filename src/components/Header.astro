@@ -2,6 +2,9 @@
 import HeaderLink from "./HeaderLink.astro";
 import SearchModal from "./SearchModal.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import { getPublishedProjects } from "../utils/content";
+
+const hasPublishedProjects = (await getPublishedProjects()).length > 0;
 ---
 
 <header class="site-header">
@@ -20,7 +23,7 @@ import ThemeToggle from "./ThemeToggle.astro";
     >
       <HeaderLink href="/">Home</HeaderLink>
       <HeaderLink href="/blog">Blog</HeaderLink>
-      <HeaderLink href="/projects">Projects</HeaderLink>
+      {hasPublishedProjects && <HeaderLink href="/projects">Projects</HeaderLink>}
       <HeaderLink href="/about">About</HeaderLink>
 
       <button
@@ -60,7 +63,7 @@ import ThemeToggle from "./ThemeToggle.astro";
       <div class="flex flex-col gap-2 items-start text-xs 2xl:text-lg hover:text-base-500 font-bold uppercase">
         <HeaderLink href="/">Home</HeaderLink>
         <HeaderLink href="/blog">Blog</HeaderLink>
-        <HeaderLink href="/projects">Projects</HeaderLink>
+        {hasPublishedProjects && <HeaderLink href="/projects">Projects</HeaderLink>}
         <HeaderLink href="/about">About</HeaderLink>
         <button
           type="button"

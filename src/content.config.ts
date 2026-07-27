@@ -12,6 +12,25 @@ const blog = defineCollection({
       // Transform string to Date object
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
+      type: z.string().optional(),
+      author: z.string().optional(),
+      contentType: z
+        .enum(['Original', 'Translation', 'Bilingual Translation', 'Repost', 'Summary', 'Commentary'])
+        .optional(),
+      language: z.array(z.string().min(1)).optional(),
+      translator: z.string().optional(),
+      originalPubDate: z.coerce.date().optional(),
+      resource: z.string().url().optional(),
+      sources: z
+        .array(
+          z.object({
+            id: z.string().optional(),
+            resource: z.string().url(),
+            title: z.string().optional(),
+            author: z.string().optional(),
+          }),
+        )
+        .optional(),
       heroImage: image().optional(),
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
@@ -29,6 +48,7 @@ const projects = defineCollection({
       updatedDate: z.coerce.date().optional(),
       heroImage: image().optional(),
       tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
     }),
 });
 

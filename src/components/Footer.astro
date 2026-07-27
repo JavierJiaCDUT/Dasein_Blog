@@ -1,21 +1,9 @@
 ---
 import { getSite } from '../utils/consts';
-import { getCollection } from 'astro:content';
-
-import { Icon } from 'astro-icon/components'
 import Clock from './Clock.astro';
 
 const today = new Date();
 const site = await getSite();
-const social = site.social || [];
-const iconMap: Record<string, string> = {
-  x: 'tabler:brand-x',
-  twitter: 'tabler:brand-x',
-  github: 'tabler:brand-github',
-  linkedin: 'tabler:brand-linkedin',
-  email: 'tabler:mail',
-  mastodon: 'tabler:brand-mastodon',
-};
 ---
 
 <footer class="py-8">
@@ -25,7 +13,7 @@ const iconMap: Record<string, string> = {
       </div>
     </div>
     <div class="grid gap-6 pt-8 pb-4 md:flex md:items-center md:justify-between">
-      <p class="text-sm text-muted m-0">{site.title} &copy; NonZeroSum {today.getFullYear()}. All rights reserved.</p>
+      <p class="text-sm text-muted m-0">&copy; {today.getFullYear()} {site.title}. All rights reserved.</p>
       <div class="md:text-right space-y-2 md:space-y-1">
         <div class="flex flex-wrap items-center gap-3 md:justify-end">
           <p class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink m-0">横滨</p>
@@ -36,7 +24,12 @@ const iconMap: Record<string, string> = {
             showSeconds={false}
           />
         </div>
-        <p class="text-sm text-subtle m-0">Designed by <a href="https://roicort.github.io" target="_blank" rel="noreferrer" class="underline">Rodrigo Cortez</a> in Morelia.</p>
+        <p class="text-sm text-subtle m-0">
+          Based on <a href="https://github.com/roicort/dasein" target="_blank" rel="noreferrer" class="underline">Dasein</a> by Rodrigo Cortez.
+          <a href="https://github.com/JavierJiaCDUT/Dasein_Blog" target="_blank" rel="noreferrer" class="underline">Source</a>
+          ·
+          <a href="https://github.com/JavierJiaCDUT/Dasein_Blog/blob/main/LICENSE" target="_blank" rel="noreferrer" class="underline">AGPL-3.0</a>
+        </p>
       </div>
     </div>
   </div>

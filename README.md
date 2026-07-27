@@ -1,81 +1,46 @@
-# Dasein
+# Javier Jia
 
-An Astro starter for personal blogs and portfolios with TypeScript, Tailwind CSS, Pagefind search, and theming.
+Personal website and blog for Javier Jia, built with Astro 6, Tailwind CSS 4, MDX, and Pagefind.
 
-![](./public/SS-1.png)
+## Local development
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/roicort/dasein)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Froicort%2Fdasein)
-
-## Features
-
-- Blog with Markdown/MDX, featured post, and tag listings
-- Typed collections for posts, authors, and socials in [src/content.config.ts](src/content.config.ts)
-- Site-wide search via Pagefind with an accessible modal
-- SEO-ready: OpenGraph/Twitter, canonical links, and preloaded fonts in [src/components/BaseHead.astro](src/components/BaseHead.astro)
-- Themes `light/dark` with persistent toggle; debug toggle for layout borders
-- RSS (`/rss.xml`) and sitemap (`/sitemap-index.xml`) generated automatically
-
-
-<div style="display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 20px;">
-    <img src="./public/SS-2.png" style="width: 180px; vertical-align: middle;" />
-    <img src="./public/SS-3.png" style="width: 180px; vertical-align: middle;" />
-    <img src="./public/SS-4.png" style="width: 180px; vertical-align: middle;" />
-</div>
-
-
-## Requirements
-- Bun
-- Astro@latest
-- Tailwdind CSS
-
-## Install & run
-
-```sh
-# install dependencies
+```bash
 bun install
-
-# start dev server
 bun run dev
-
-# production build
-bun run build
-
-# preview the build
-bun run preview
 ```
+
+The development server runs at `http://localhost:4321`.
 
 ## Content
 
-- Posts: add `.md` or `.mdx` under `src/content/blog`. Schema validates `title`, `description`, `pubDate`, `updatedDate?`, `heroImage?`, `tags[]`.
-- Authors: `src/content/authors.yml`.
-- Socials: `src/content/socials.yml`.
+Blog posts live in `src/content/blog/`. Project case studies live in `src/content/projects/`.
 
-Frontmatter example:
-```md
----
-title: "How we launch in 6 weeks"
-description: "End-to-end process for small teams."
-pubDate: 2024-12-12
-updatedDate: 2025-01-03
-tags: [delivery, process]
-heroImage: ../../assets/blog/ship.jpg
----
+Both collections support local-only drafts:
+
+```yaml
+draft: true
 ```
 
-## Quick customization
+Drafts are visible during local development. Production builds exclude them from generated pages, lists, tags, RSS, sitemap, and search.
 
-- Site name and description in [src/consts.ts](src/consts.ts).
-- Navigation and hero actions in [src/pages/index.astro](src/pages/index.astro).
-- Colors, type, and utilities in `src/styles/global.css`.
-- Key components: header with search and toggles ([src/components/Header.astro](src/components/Header.astro)), base layout ([src/layouts/BaseLayout.astro](src/layouts/BaseLayout.astro)).
+## Production build
 
-## Available scripts
+```bash
+bun run build
+bun run preview
+```
 
-- `bun run dev`: server on `localhost:4321` (Astro default).
-- `bun run build`: outputs `dist/` ready to deploy.
-- `bun run preview`: serves the built site locally.
+The static site is generated in `dist/`.
 
-## Deploy
+## Deployment
 
-Output is static HTML. Upload `dist/` to your platform of choice (Netlify, Vercel, Cloudflare Pages, S3+CDN). Set `BASE_URL` if you publish under a subpath.
+The site is deployed to Cloudflare Workers using the configuration in `wrangler.jsonc`.
+
+```bash
+bun run build
+npx wrangler deploy
+```
+
+## License and attribution
+
+This repository is licensed under AGPL-3.0. The site is based on [Dasein](https://github.com/roicort/dasein) by Rodrigo Cortez.

@@ -1,14 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import PageLayout from '../../layouts/PageLayout.astro';
 
 import { getSite } from '../../utils/consts';
+import { getPublishedProjects } from '../../utils/content';
 import { withBase } from '../../utils/slugify';
 
-const projects = (await getCollection('projects')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const projects = await getPublishedProjects();
 const site = await getSite();
 ---
 

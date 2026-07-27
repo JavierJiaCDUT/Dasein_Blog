@@ -7,3 +7,11 @@ export async function getPublishedPosts() {
     });
     return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
+
+export async function getPublishedProjects() {
+    const projects = await getCollection('projects', ({ data }) => {
+        // Show all projects in dev mode, filter out drafts in production
+        return import.meta.env.DEV || !data.draft;
+    });
+    return projects.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+}

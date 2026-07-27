@@ -1,22 +1,16 @@
 title:
-  text: "Dasein"
+  text: "Javier Jia"
 
 author:
-  name: JAVIERJIA
-  role: Module Leader in Innovative Product Development
-  bio: Known for Project Supervisor, Former Ubisoft Big Data Product Manager, and Investment & Philosophy.
+  name: Javier Jia
+  role: Innovative Product Development Module Leader
+  bio: Educator and product leader connecting higher education with real-world product development.
   location: Chengdu, China
 
 social:
-  - id: "x"
-    label: "X"
-    href: "#_"
   - id: "github"
     label: "GitHub"
     href: "https://github.com/JavierJiaCDUT"
   - id: "linkedin"
-    label: "Linkedin"
-    href: "#_"
-  - id: "email"
-    label: "Email"
-    href: "mailto:"
+    label: "LinkedIn"
+    href: "https://www.linkedin.com/in/jia-xinyuan-1a8a8b176"
