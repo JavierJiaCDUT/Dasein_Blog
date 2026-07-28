@@ -13,30 +13,71 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata | string;
+	language?: string;
+	alternateLanguages?: string[];
+	openGraphType?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	articleSection?: string;
+	articleTags?: string[];
 }
 
-const { title, description, image = DefaultSocialImage } = Astro.props;
+const {
+	title,
+	description,
+	image = DefaultSocialImage,
+	language = 'en',
+	alternateLanguages = [],
+	openGraphType = 'website',
+	publishedTime,
+	modifiedTime,
+	articleSection,
+	articleTags = [],
+} = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(typeof image === 'string' ? image : image.src, Astro.site ?? Astro.url);
 const usesDefaultSocialImage = image === DefaultSocialImage;
+const titleTemplate = title === site.title ? undefined : `%s · ${site.title}`;
+const openGraphLocales: Record<string, string> = {
+	en: 'en_US',
+	'en-US': 'en_US',
+	'en-GB': 'en_GB',
+	'zh-CN': 'zh_CN',
+};
+const toOpenGraphLocale = (code: string) => openGraphLocales[code] ?? code.replaceAll('-', '_');
+const locale = toOpenGraphLocale(language);
+const localeAlternate = alternateLanguages
+	.filter((code) => code !== language)
+	.map(toOpenGraphLocale);
+const article = openGraphType === 'article'
+	? {
+			publishedTime: publishedTime?.toISOString(),
+			modifiedTime: modifiedTime?.toISOString(),
+			section: articleSection,
+			tags: articleTags,
+		}
+	: undefined;
 ---
 
 <SEO
 	charset="utf-8"
 	title={title}
+	titleTemplate={titleTemplate}
 	description={description}
 	canonical={canonicalURL.toString()}
 	openGraph={{
 		basic: {
 			title,
-			type: 'website',
+			type: openGraphType,
 			image: imageURL.toString(),
 			url: canonicalURL.toString(),
 		},
 		optional: {
 			description,
-			siteName: site.author.name || 'Javier Jia',
+			siteName: site.title,
+			locale,
+			...(localeAlternate.length > 0 ? { localeAlternate } : {}),
 		},
 		image: {
 			alt: title,
@@ -46,6 +87,7 @@ const usesDefaultSocialImage = image === DefaultSocialImage;
 				height: 630,
 			} : {}),
 		},
+		...(article ? { article } : {}),
 	}}
 	twitter={{
 		card: 'summary_large_image',
@@ -58,7 +100,7 @@ const usesDefaultSocialImage = image === DefaultSocialImage;
 		link: [
 			{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
 			{ rel: 'sitemap', href: '/sitemap-index.xml' },
-			{ rel: 'alternate', type: 'application/rss+xml', title: site.author?.name || 'Javier Jia', href: new URL('rss.xml', Astro.site).toString() },
+			{ rel: 'alternate', type: 'application/rss+xml', title: site.title, href: new URL('rss.xml', Astro.site).toString() },
 			{ rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' },
 		],
 		meta: [

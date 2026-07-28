@@ -1,19 +1,25 @@
 ---
-import { getCollection } from 'astro:content';
 import Card from '../../components/Card.astro';
 import PageLayout from '../../layouts/PageLayout.astro';
 
 import { getPublishedPosts } from '../../utils/content';
-import { getSite } from '../../utils/consts';
 import { slugify, withBase } from '../../utils/slugify';
 
 const posts = await getPublishedPosts();
 const [featured, ...rest] = posts;
-const site = await getSite();
 ---
 
-<PageLayout title={site.title} description="Blog" searchable={false}>
+<PageLayout
+	title="Blog"
+	description="Articles and research notes curated by Javier Jia."
+	searchable={false}
+>
 	<section class="content-shell py-12 space-y-8">
+		<header class="space-y-2">
+			<p class="text-sm uppercase tracking-[0.35em] text-muted">Journal</p>
+			<h1 class="text-4xl font-semibold text-ink">Blog</h1>
+			<p class="text-muted max-w-3xl">Articles and research notes on technology, markets, and product development.</p>
+		</header>
 		{featured && (
 			<div class="grid grid-cols-1">
 				<Card

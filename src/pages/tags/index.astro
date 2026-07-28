@@ -1,10 +1,8 @@
 ---
 import { getPublishedPosts } from '../../utils/content';
 import PageLayout from '../../layouts/PageLayout.astro';
-import { getSite } from '../../utils/consts';
 
 const posts = await getPublishedPosts();
-const site = await getSite();
 const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, '-');
 
 const tagCounts = new Map<string, number>();
@@ -20,16 +18,16 @@ const tags = Array.from(tagCounts.entries()).sort((a, b) => {
 });
 ---
 
-<PageLayout title={`Tags · ${site.title}`} description="Explora las entradas por etiqueta" searchable={false}>
+<PageLayout title="Tags" description="Browse articles by topic." searchable={false}>
 	<section class="content-shell py-12 space-y-6">
 		<header class="space-y-2">
-			<p class="text-sm uppercase tracking-[0.3em] text-muted">Etiquetas</p>
-			<h1 class="text-3xl font-semibold text-ink">Busca por tema</h1>
-			<p class="text-muted">Explora todas las etiquetas disponibles y las entradas asociadas.</p>
+			<p class="text-sm uppercase tracking-[0.3em] text-muted">Topics</p>
+			<h1 class="text-3xl font-semibold text-ink">Browse by topic</h1>
+			<p class="text-muted">Explore all available tags and their associated articles.</p>
 		</header>
 
 		{tags.length === 0 ? (
-			<p class="text-muted">Aún no hay etiquetas.</p>
+			<p class="text-muted">No tags have been published yet.</p>
 		) : (
 			<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 				{tags.map(([tag, count]) => (

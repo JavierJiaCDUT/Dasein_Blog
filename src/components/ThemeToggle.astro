@@ -9,57 +9,93 @@ const { class: className = '' } = Astro.props as Props;
 <button
 	type="button"
 	data-theme-toggle
-	aria-label="Toggle theme"
+	aria-label="Theme preference: System. Switch to Light"
 	class={className}
 >
-	<span class="sr-only">Toggle theme</span>
-	<span class="theme-toggle__icon inline-flex [html[data-theme='dark']_&]:hidden [html[data-theme='blue']_&]:hidden" aria-hidden="true">
-		Dark
-	</span>
-	<span class="theme-toggle__icon hidden [html[data-theme='dark']_&]:inline-flex" aria-hidden="true">
-		Light
-	</span>
+	<span class="sr-only">Theme preference</span>
+	<span data-theme-label aria-hidden="true">System</span>
 </button>
 
 <script>
-const STORAGE_KEY = 'theme';
-const THEMES = ['light', 'dark'];
+const STORAGE_KEY = 'theme-preference';
+const PREFERENCES = ['system', 'light', 'dark'];
+const SYSTEM_THEME = window.matchMedia('(prefers-color-scheme: dark)');
 
-const getPreferredTheme = () => {
-	const stored = localStorage.getItem(STORAGE_KEY);
-	if (THEMES.includes(stored ?? '')) return stored;
-	return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const getStoredPreference = () => {
+	try {
+		const stored = localStorage.getItem(STORAGE_KEY);
+		return PREFERENCES.includes(stored ?? '') ? stored : 'system';
+	} catch {
+		return 'system';
+	}
 };
 
-const applyTheme = (theme) => {
+const resolveTheme = (preference) =>
+	preference === 'system'
+		? SYSTEM_THEME.matches
+			? 'dark'
+			: 'light'
+		: preference;
+
+const nextPreference = (preference) => {
+	const index = PREFERENCES.indexOf(preference);
+	return PREFERENCES[(index + 1) % PREFERENCES.length];
+};
+
+const formatPreference = (preference) =>
+	preference.charAt(0).toUpperCase() + preference.slice(1);
+
+const applyPreference = (preference) => {
+	const theme = resolveTheme(preference);
+	const next = nextPreference(preference);
+	document.documentElement.dataset.themePreference = preference;
 	document.documentElement.dataset.theme = theme;
+
 	const buttons = document.querySelectorAll('[data-theme-toggle]');
-	buttons.forEach((b) => b.setAttribute('aria-label', `Toggle theme (current: ${theme})`));
+	buttons.forEach((button) => {
+		const label = button.querySelector('[data-theme-label]');
+		if (label) label.textContent = formatPreference(preference);
+		button.setAttribute(
+			'aria-label',
+			`Theme preference: ${formatPreference(preference)}. Switch to ${formatPreference(next)}`,
+		);
+	});
 };
 
-const nextTheme = (current) => {
-	const idx = THEMES.indexOf(current);
-	const nextIdx = idx === -1 ? 0 : (idx + 1) % THEMES.length;
-	return THEMES[nextIdx];
+const savePreference = (preference) => {
+	try {
+		if (preference === 'system') {
+			localStorage.removeItem(STORAGE_KEY);
+		} else {
+			localStorage.setItem(STORAGE_KEY, preference);
+		}
+	} catch {
+		// The selected preference still applies for the current page.
+	}
 };
 
-const toggleTheme = () => {
-	const current = document.documentElement.dataset.theme || getPreferredTheme();
-	const next = nextTheme(current);
-	localStorage.setItem(STORAGE_KEY, next);
-	applyTheme(next);
+const cyclePreference = () => {
+	const current =
+		document.documentElement.dataset.themePreference || getStoredPreference();
+	const next = nextPreference(current);
+	savePreference(next);
+	applyPreference(next);
 };
 
-// init
-applyTheme(getPreferredTheme());
-
-// delegated listener: works for all existing and future instances (mobile, dynamic, etc.)
 document.addEventListener('click', (e) => {
 	const t = e.target;
 	if (!(t instanceof Element)) return;
 	const btn = t.closest('[data-theme-toggle]');
 	if (!btn) return;
 	e.preventDefault();
-	toggleTheme();
+	cyclePreference();
 });
+
+SYSTEM_THEME.addEventListener('change', () => {
+	if (document.documentElement.dataset.themePreference === 'system') {
+		applyPreference('system');
+	}
+});
+
+applyPreference(getStoredPreference());
 </script>

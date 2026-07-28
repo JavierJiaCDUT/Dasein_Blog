@@ -10,16 +10,70 @@ interface Props {
 	description?: string;
 	image?: ImageMetadata | string;
 	searchable?: boolean;
+	language?: string;
+	alternateLanguages?: string[];
+	openGraphType?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	articleSection?: string;
+	articleTags?: string[];
 }
 
 const site = await getSite();
-const { title = site.author.name, description, image, searchable = true } = Astro.props;
+const {
+    title = site.author.name,
+    description,
+    image,
+    searchable = true,
+    language = 'en',
+    alternateLanguages = [],
+    openGraphType = 'website',
+    publishedTime,
+    modifiedTime,
+    articleSection,
+    articleTags = [],
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={language}>
     <head>
-        <BaseHead title={title} description={description || site.author?.bio || ''} image={image} />
+        <script is:inline>
+            (() => {
+                const storageKey = "theme-preference";
+                const preferences = ["system", "light", "dark"];
+                let preference = "system";
+
+                try {
+                    const stored = localStorage.getItem(storageKey);
+                    if (preferences.includes(stored)) preference = stored;
+                } catch {
+                    // System remains the default when storage is unavailable.
+                }
+
+                const theme =
+                    preference === "system"
+                        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                            ? "dark"
+                            : "light"
+                        : preference;
+
+                document.documentElement.dataset.themePreference = preference;
+                document.documentElement.dataset.theme = theme;
+            })();
+        </script>
+        <BaseHead
+            title={title}
+            description={description || site.author?.bio || ''}
+            image={image}
+            language={language}
+            alternateLanguages={alternateLanguages}
+            openGraphType={openGraphType}
+            publishedTime={publishedTime}
+            modifiedTime={modifiedTime}
+            articleSection={articleSection}
+            articleTags={articleTags}
+        />
     </head>
     <body data-pagefind-ignore={searchable ? undefined : 'all'}>
         <Header />

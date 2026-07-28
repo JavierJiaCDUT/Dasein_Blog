@@ -66,6 +66,7 @@ const languageNames: Record<string, string> = {
     'zh-CN': '简体中文',
 };
 const languageLabel = language.map((code) => languageNames[code] ?? code).join(' / ');
+const [primaryLanguage = 'en', ...alternateLanguages] = language;
 const sourceMap = new Map(sources.map((source) => [source.resource, source]));
 
 if (resource && !sourceMap.has(resource)) {
@@ -91,7 +92,18 @@ const hasAttribution = Boolean(
 );
 ---
 
-<BaseLayout title={title} description={description} image={heroImage}>
+<BaseLayout
+    title={title}
+    description={description}
+    image={heroImage}
+    language={primaryLanguage}
+    alternateLanguages={alternateLanguages}
+    openGraphType="article"
+    publishedTime={pubDate}
+    modifiedTime={updatedDate}
+    articleSection={type ?? 'Journal'}
+    articleTags={tags}
+>
     <div class="flex-1 flex flex-col py-12 md:py-16 lg:py-20 space-y-16">
     <article class="post-page max-w-4xl w-full mx-auto">
         <header class="section-heading">
