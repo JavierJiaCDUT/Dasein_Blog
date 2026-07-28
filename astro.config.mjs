@@ -1,6 +1,7 @@
 // @ts-check
 
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import pagefind from "astro-pagefind";
 import { defineConfig } from "astro/config";
@@ -16,11 +17,14 @@ import rehypeKatex from "rehype-katex";
 export default defineConfig({
   site: "https://javierjia-blog.javier-b09.workers.dev",
   base: "/",
+  compressHTML: true,
   integrations: [mdx(), sitemap(), pagefind(), icon()],
 
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    processor: unified({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    }),
   },
 
   vite: {

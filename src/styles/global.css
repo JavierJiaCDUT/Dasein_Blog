@@ -306,3 +306,22 @@
 		line-height: 1.2;
 	}
 }
+
+pagefind-modal,
+pagefind-modal-trigger {
+	--pf-text: var(--color-ink);
+	--pf-text-secondary: var(--color-muted);
+	--pf-text-muted: var(--color-muted);
+	--pf-background: var(--color-surface);
+	--pf-border: var(--color-border);
+	--pf-border-focus: color-mix(in oklab, var(--color-ink) 36%, transparent);
+	--pf-skeleton: color-mix(in oklab, var(--color-ink) 10%, var(--color-surface));
+	--pf-skeleton-shine: color-mix(in oklab, var(--color-ink) 5%, var(--color-surface));
+	--pf-hover: color-mix(in oklab, var(--color-ink) 6%, var(--color-surface));
+	--pf-mark: var(--color-ink);
+	--pf-scroll-shadow: color-mix(in oklab, var(--color-ink) 10%, transparent);
+	--pf-outline-focus: var(--color-ink);
+	--pf-font: var(--font-sans);
+	--pf-border-radius: 12px;
+	--pf-modal-backdrop: color-mix(in oklab, var(--color-paper) 88%, transparent);
+}

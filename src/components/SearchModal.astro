@@ -1,421 +1,81 @@
 ---
-import Search from "astro-pagefind/components/Search";
-import { Icon } from 'astro-icon/components';
+import PagefindConfig from "astro-pagefind/components/PagefindConfig.astro";
 ---
 
-<div
-	id="search-modal"
-	class="search-modal"
-	role="dialog"
-	aria-modal="true"
-	aria-hidden="true"
-	aria-labelledby="search-modal-title"
-	inert
->
-	<div class="search-modal__backdrop" data-close="search"></div>
-	<div class="search-modal__panel" tabindex="-1">
-		<div class="search-modal__header">
-			<div class="search-modal__title">
-				<p class="search-modal__eyebrow">Search</p>
-				<h2 id="search-modal-title">Find anything on the site</h2>
-			</div>
-			<div class="search-modal__actions">
-				<span class="search-modal__hint">Esc</span>
-				<button type="button" class="search-close" id="search-close" aria-label="Close search dialog">
-					<Icon name="tabler:x" size={16} stroke-width={1.6} />
-				</button>
-			</div>
-		</div>
-		<Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
-		<p class="search-modal__footnote">Powered by Pagefind. Start typing to search posts, pages, and team members.</p>
-	</div>
-</div>
+<PagefindConfig />
+<pagefind-modal>
+  <pagefind-modal-header>
+    <pagefind-input></pagefind-input>
+  </pagefind-modal-header>
+  <pagefind-modal-body>
+    <pagefind-summary></pagefind-summary>
+    <pagefind-results hide-sub-results></pagefind-results>
+  </pagefind-modal-body>
+  <pagefind-modal-footer>
+    <pagefind-keyboard-hints></pagefind-keyboard-hints>
+  </pagefind-modal-footer>
+</pagefind-modal>
 
-<script is:inline>
-const searchModal = document.getElementById('search-modal');
-const searchClose = document.getElementById('search-close');
-const searchBackdrop = document.querySelector('[data-close="search"]');
-const searchPanel = searchModal?.querySelector('.search-modal__panel');
-const backgroundInertState = new Map();
-let searchOpener = null;
+<script>
+  let searchOpener: HTMLElement | null = null;
 
-const focusableSelector = [
-	'a[href]',
-	'button:not([disabled])',
-	'input:not([disabled])',
-	'select:not([disabled])',
-	'textarea:not([disabled])',
-	'[contenteditable="true"]',
-	'[tabindex]:not([tabindex="-1"])',
-].join(',');
+  const getTriggerButton = (trigger: Element | null) =>
+    trigger?.querySelector("button") instanceof HTMLElement
+      ? trigger.querySelector<HTMLElement>("button")
+      : null;
 
-// Ensure modal is not constrained by ancestor transforms/overflow.
-if (searchModal && searchModal.parentElement !== document.body) {
-	document.body.appendChild(searchModal);
-}
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const trigger = event.target.closest("pagefind-modal-trigger");
+    if (trigger) searchOpener = getTriggerButton(trigger);
+  });
 
-const getFocusableElements = () => {
-	if (!searchModal) return [];
+  document.addEventListener("keydown", (event) => {
+    const isSearchShortcut =
+      event.key.toLowerCase() === "k" &&
+      (event.metaKey || event.ctrlKey) &&
+      !event.altKey &&
+      !event.shiftKey;
 
-	return Array.from(searchModal.querySelectorAll(focusableSelector)).filter(
-		(element) => {
-			if (!(element instanceof HTMLElement)) return false;
-			const style = window.getComputedStyle(element);
-			return (
-				element.getClientRects().length > 0 &&
-				style.display !== 'none' &&
-				style.visibility !== 'hidden' &&
-				!element.closest('[inert]')
-			);
-		}
-	);
-};
+    if (!isSearchShortcut) return;
 
-const setBackgroundInert = (isInert) => {
-	if (!searchModal) return;
+    const visibleTrigger = Array.from(
+      document.querySelectorAll("pagefind-modal-trigger"),
+    ).find((trigger) => trigger.getClientRects().length > 0);
 
-	if (isInert) {
-		backgroundInertState.clear();
-		Array.from(document.body.children).forEach((element) => {
-			if (!(element instanceof HTMLElement) || element === searchModal) return;
-			backgroundInertState.set(element, element.hasAttribute('inert'));
-			element.setAttribute('inert', '');
-		});
-		return;
-	}
+    searchOpener =
+      getTriggerButton(visibleTrigger ?? null) ??
+      (document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null);
+  });
 
-	backgroundInertState.forEach((wasInert, element) => {
-		if (!wasInert) element.removeAttribute('inert');
-	});
-	backgroundInertState.clear();
-};
+  customElements.whenDefined("pagefind-modal").then(() => {
+    const modal = document.querySelector("pagefind-modal");
+    const dialog = modal?.querySelector("dialog");
 
-const setSearchVisibility = (isOpen) => {
-	if (!searchModal) return;
-	searchModal.classList.toggle('is-open', isOpen);
-	searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-	searchModal.toggleAttribute('inert', !isOpen);
-	
-	// Toggle aria-expanded on all search triggers
-	const searchTriggers = document.querySelectorAll('.search-trigger');
-	searchTriggers.forEach(trigger => {
-		trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-	});
-	
-	document.body.classList.toggle('search-open', isOpen);
-};
+    dialog?.addEventListener("close", () => {
+      queueMicrotask(() => {
+        document
+          .querySelectorAll<HTMLElement>("pagefind-modal-trigger button")
+          .forEach((button) => {
+            button.setAttribute("aria-expanded", "false");
+          });
 
-const focusSearchInput = () => {
-	const input = searchModal?.querySelector('.pagefind-ui__search-input');
-	if (input instanceof HTMLInputElement) {
-		input.focus();
-		input.select();
-		return true;
-	}
-	return false;
-};
+        const focusTarget =
+          searchOpener && searchOpener.getClientRects().length > 0
+            ? searchOpener
+            : document.getElementById("nav-toggle");
 
-const openSearch = (trigger) => {
-	if (!searchModal || searchModal.classList.contains('is-open')) return;
+        if (
+          focusTarget instanceof HTMLElement &&
+          focusTarget.getClientRects().length > 0
+        ) {
+          focusTarget.focus();
+        }
 
-	const activeElement = document.activeElement;
-	searchOpener =
-		trigger instanceof HTMLElement && trigger.getClientRects().length > 0
-			? trigger
-			: activeElement instanceof HTMLElement
-				? activeElement
-				: null;
-
-	setSearchVisibility(true);
-	if (!focusSearchInput() && searchPanel instanceof HTMLElement) {
-		searchPanel.focus();
-	}
-	setBackgroundInert(true);
-
-	window.requestAnimationFrame(() => {
-		window.setTimeout(focusSearchInput, 60);
-	});
-};
-
-const closeSearch = () => {
-	if (!searchModal?.classList.contains('is-open')) return;
-
-	setBackgroundInert(false);
-	if (searchOpener instanceof HTMLElement && searchOpener.isConnected) {
-		searchOpener.focus();
-	}
-	setSearchVisibility(false);
-	searchOpener = null;
-};
-
-const trapSearchFocus = (event) => {
-	if (event.key !== 'Tab' || !searchModal?.classList.contains('is-open')) return;
-
-	const focusableElements = getFocusableElements();
-	if (focusableElements.length === 0) {
-		event.preventDefault();
-		if (searchPanel instanceof HTMLElement) searchPanel.focus();
-		return;
-	}
-
-	const firstElement = focusableElements[0];
-	const lastElement = focusableElements[focusableElements.length - 1];
-	const activeElement = document.activeElement;
-
-	if (event.shiftKey && (activeElement === firstElement || !searchModal.contains(activeElement))) {
-		event.preventDefault();
-		lastElement.focus();
-	} else if (!event.shiftKey && (activeElement === lastElement || !searchModal.contains(activeElement))) {
-		event.preventDefault();
-		firstElement.focus();
-	}
-};
-
-// Bind to all elements with class 'search-trigger'
-document.addEventListener('click', (event) => {
-	if (!(event.target instanceof Element)) return;
-	const trigger = event.target.closest('.search-trigger');
-	if (trigger) {
-		openSearch(trigger);
-	}
-});
-
-if (searchClose) searchClose.addEventListener('click', closeSearch);
-if (searchBackdrop) searchBackdrop.addEventListener('click', closeSearch);
-
-window.addEventListener('keydown', (event) => {
-	if (event.key === 'Escape' && searchModal?.classList.contains('is-open')) {
-		event.preventDefault();
-		closeSearch();
-		return;
-	}
-	trapSearchFocus(event);
-});
+        searchOpener = null;
+      });
+    });
+  });
 </script>
-
-<style is:inline>
-
-.search-modal {
-	position: fixed;
-	inset: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: 1100;
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-	padding: clamp(12px, 4vw, 32px);
-	opacity: 0;
-	pointer-events: none;
-	transition: opacity 180ms ease;
-}
-
-.search-modal.is-open {
-	opacity: 1;
-	pointer-events: auto;
-}
-
-.search-modal__backdrop {
-	position: fixed;
-	inset: 0;
-	width: 100vw;
-	height: 100vh;
-	background: var(--color-paper, #f9f9f9);
-	backdrop-filter: blur(14px) saturate(1.2);
-	opacity: 0.94;
-	z-index: 0;
-}
-
-html[data-theme='dark'] .search-modal__backdrop {
-	background: color-mix(in oklab, var(--color-paper, #101012) 35%, #06060a 65%);
-}
-
-.search-modal__panel {
-	position: relative;
-	width: min(960px, 100%);
-	margin-top: clamp(32px, 6vh, 96px);
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 94%, transparent);
-	border-radius: 24px;
-	box-shadow: 0 24px 80px color-mix(in oklab, var(--color-ink, #111) 12%, transparent);
-	padding: clamp(1rem, 2vw, 1.5rem);
-	z-index: 1;
-}
-
-.search-modal__header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-	margin-bottom: 0.75rem;
-}
-
-.search-modal__title h2 {
-	margin: 0.15rem 0 0;
-	font-size: clamp(1.2rem, 2vw, 1.45rem);
-}
-
-.search-modal__eyebrow {
-	margin: 0;
-	font-size: 0.7rem;
-	letter-spacing: 0.2em;
-	text-transform: uppercase;
-	color: var(--color-muted, #6b6b6b);
-}
-
-.search-modal__actions {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.65rem;
-}
-
-.search-modal__hint {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 42px;
-	padding: 0.35rem 0.5rem;
-	border-radius: 10px;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 85%, var(--color-ink, #111) 4%);
-	font-size: 0.72rem;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-}
-
-.search-close {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 36px;
-	height: 36px;
-	border-radius: 12px;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 90%, transparent);
-	color: var(--color-ink, currentColor);
-	cursor: pointer;
-	transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
-}
-
-.search-close:hover {
-	border-color: color-mix(in oklab, var(--color-ink, #111) 26%, transparent);
-	background: color-mix(in oklab, var(--color-surface, #fff) 82%, var(--color-ink, #111) 6%);
-	transform: translateY(-1px);
-}
-
-.search-modal__footnote {
-	margin: 0.75rem 0 0;
-	font-size: 0.82rem;
-	color: var(--color-muted, #6b6b6b);
-}
-
-body.search-open {
-	overflow: hidden;
-}
-
-#search-modal .pagefind-ui {
-	width: 100%;
-}
-
-#search-modal .pagefind-ui__form {
-	display: flex;
-	align-items: center;
-	gap: 0.65rem;
-	padding: 0.85rem 1rem;
-	border-radius: 18px;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 94%, transparent);
-	box-shadow:
-		inset 0 0 0 1px color-mix(in oklab, var(--color-ink, #111) 6%, transparent),
-		0 16px 36px color-mix(in oklab, var(--color-ink, #111) 10%, transparent);
-}
-
-#search-modal .pagefind-ui__search-input {
-	flex: 1;
-	border: none;
-	background: transparent;
-	font-size: 1rem;
-	color: var(--color-ink, currentColor);
-	outline: none;
-}
-
-#search-modal .pagefind-ui__search-clear {
-	border-radius: 10px;
-	padding: 0.35rem 0.5rem;
-	border: 1px solid transparent;
-	background: color-mix(in oklab, var(--color-ink, #111) 6%, transparent);
-	cursor: pointer;
-	transition: border-color 120ms ease, background-color 120ms ease;
-}
-
-#search-modal .pagefind-ui__search-clear.pagefind-ui__suppressed {
-	visibility: hidden;
-}
-
-#search-modal .pagefind-ui__search-clear:hover {
-	border-color: var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
-}
-
-#search-modal .pagefind-ui__results {
-	margin-top: 1rem;
-	max-height: 60vh;
-	overflow-y: auto;
-	display: grid;
-	gap: 0.6rem;
-}
-
-#search-modal .pagefind-ui__result {
-	padding: 0.9rem 1rem;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	border-radius: 14px;
-	background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
-	transition: border-color 120ms ease, transform 120ms ease;
-}
-
-#search-modal .pagefind-ui__result:hover {
-	border-color: color-mix(in oklab, var(--color-ink, #111) 20%, transparent);
-	transform: translateY(-1px);
-}
-
-#search-modal .pagefind-ui__result-title {
-	margin: 0 0 0.35rem;
-	font-size: 1rem;
-	font-weight: 700;
-}
-
-#search-modal .pagefind-ui__result-excerpt {
-	margin: 0;
-	color: var(--color-muted, #6b6b6b);
-}
-
-#search-modal .pagefind-ui__message {
-	text-align: left;
-	font-size: 0.95rem;
-	color: var(--color-muted, #6b6b6b);
-}
-
-@media (max-width: 720px) {
-	.search-modal__panel {
-		margin-top: clamp(16px, 5vh, 42px);
-		padding: 1rem;
-	}
-
-	.search-modal__header {
-		align-items: flex-start;
-		flex-direction: column;
-	}
-
-	.search-modal__actions {
-		align-self: flex-end;
-	}
-
-	.search-trigger {
-		justify-content: center;
-	}
-
-	.search-trigger__label {
-		font-size: 0.74rem;
-	}
-}
-</style>
