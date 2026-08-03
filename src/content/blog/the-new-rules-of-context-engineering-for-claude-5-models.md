@@ -1,3 +1,25 @@
+---
+type: Article
+title: "The New Rules of Context Engineering for Claude 5 Models"
+description: "Anthropic 团队分享针对 Claude 5 系列模型的上下文工程新法则，涵盖系统提示词简化、渐进式披露与接口设计等核心实践。"
+pubDate: 2026-08-03
+updatedDate: 2026-08-03
+author: "Anthropic"
+contentType: "Bilingual Translation"
+language: [en, zh-CN]
+translationMethod: "AI-Assisted"
+originalPubDate: 2026-08-03
+resource: "https://www.anthropic.com/news/context-engineering-claude-5"
+sources:
+  - id: anthropic-original
+    resource: "https://www.anthropic.com/news/context-engineering-claude-5"
+    title: "The new rules of context engineering for Claude 5 models"
+    author: "Anthropic"
+heroImage: ../../assets/blog/the-new-rules-of-context-engineering-for-claude-5-models/hero.png
+tags: [Claude, Context Engineering, Prompt Engineering, AI]
+draft: false
+---
+
 I’ve written previously about how to best prompt the newest generation of Claude 5 models and work with them iteratively to discover what you want to build.
 
 But when you send a message to Claude, the prompt is only a small part of the context it gets. Much of your context is assembled from your system prompt, Skills, CLAUDE.md files, memory, and other sources. We call this context engineering, and it makes a big impact on the results you generate when using Claude Code or in building your own agents.
@@ -14,12 +36,11 @@ Here’s what we’ve learned about prompting this new class of models, and how 
 
 与提示词不同，上下文在多个请求中通用，因此不能太具体。如何为 Claude 构建这些通用提示和指导，尤其是当您不知道用户的提示词可能是什么时？
 
-随着 Claude 自身能力的不断发展，这可能出奇地困难。最近，我们注意到在提示最新一代 Claude 模型时方式有了很大变化。对于 Claude Opus 5 和 Claude Fable 5 等模型，我们删除了 Claude Code 超过 80% 的系统提
-示词，但在代码评估上没有明显的性能损失。
+随着 Claude 自身能力的不断发展，这可能出奇地困难。最近，我们注意到在提示最新一代 Claude 模型时方式有了很大变化。对于 Claude Opus 5 和 Claude Fable 5 等模型，我们删除了 Claude Code 超过 80% 的系统提示词，但在代码评估上没有明显的性能损失。
 
-以下是我们在提示这一类新型模型时学到的知识，以及如何利用这些知识来更新您的上下文工程。我们已将这些最佳实践放入`claude doctor`中，请在 Claude Code 中使用 /doctor 命令来优化您的技能和 CLAUDE.md 文件。
+以下是我们在提示这一类新型模型时学到的知识，以及如何利用这些知识来更新您的上下文工程。我们已将这些最佳实践放入 `claude doctor` 中，请在 Claude Code 中使用 /doctor 命令来优化您的技能和 CLAUDE.md 文件。
 
-## Unhobbling Claude 为 Claude 松绑
+## Unhobbling Claude｜为 Claude 松绑
 
 Overall, we found that we were over-constraining Claude Code, both through our system prompt and in our CLAUDE.md files and skills.
 
@@ -41,7 +62,7 @@ Additionally, Claude Code now has many more tools. Claude used to rely on CLAUDE
 
 此外，Claude Code 现在配备了更多工具。过去，Claude 依赖 CLAUDE.md 作为记忆、信息和指导的来源；如今，我们引入了记忆、构件和技能机制，Claude 可以利用它们创造出跨会话加载和共享上下文的全新方式。
  
-## Then and now 过去与现在
+## Then and now｜过去与现在
 
 There were a number of previous context engineering best practices that had become myths. Including:
 
@@ -84,13 +105,13 @@ Earlier Claude models could sometimes need repeated instructions or be more like
 
 We found we could delete these repeat examples and put instructions on how to use tools in the tool descriptions rather than the system prompt.
 
-Then: Memory in CLAUDE.md files
-Now: Auto-memory
+**Then: Memory in CLAUDE.md files**
+**Now: Auto-memory**
 
 We used to encourage users to save things to Claude’s memory, by using the # hotkey to write to their CLAUDE.md automatically. Instead, Claude now automatically saves memories that are relevant to the work and to you.
 
-**Then: Simple specs
-Now: Rich references**
+**Then: Simple specs**
+**Now: Rich references**
 
 In plan mode, Claude Code has heavily relied on markdown files with plans. Storing these files as plans helped Claude refer to them when needed. Another similar best practice was to store specs in the codebase for Claude to refer to while working across longer projects.
 
@@ -158,26 +179,36 @@ Rubrics are another form of references. Rubrics allow Claude to try and verify y
 
 评估标准是另一种形式的参考资料。评估标准允许 Claude 通过动态工作流并启动配备这些标准的验证代理，来尝试并验证您在特定领域的品味（例如，优秀的 API 设计是什么样的）。
 
-## Applying this to your context
+## Applying this to your context 将这些方法应用到你的上下文中
 
 Pulling this all together, what does this look like when you assemble your context?
+把这些内容汇总起来看，当你组装自己的上下文时，它应该是什么样子的呢？
 
 ### System Prompt
 A system prompt is heavily tied to the product context. It tells Claude what product it’s operating in and what it’s doing. For Claude Code, you will likely never modify this, but if you are building your own agent harness, this is where you should spend a lot of time.
+系统提示词与产品上下文紧密相关。它告诉 Claude 自己运行在什么产品中，以及它正在做什么。对于 Claude Code 来说，你很可能永远不需要修改它；但如果你正在构建自己的 Agent 框架（agent harness），那么这里就是你应该投入大量时间的地方。
 
 ### CLAUDE.md
 
 Keep your CLAUDE.md lightweight and briefly describe what your repo is for, but spend most of the tokens on gotchas inside of the codebase. For example, you may organize your code to keep types in one monolithic file and nowhere else. Avoid stating ‘the obvious’ things Claude should know by looking at your file system or your repo.
 Use progressive disclosure for more details, for example if you have several unique instructions on how to verify your work, create a verification skill and reference it from your CLAUDE.md.
+让你的 CLAUDE.md 保持轻量，简要描述你的代码仓库是做什么的，但要把大部分 token 花在代码库中容易踩坑的地方。例如，你的代码组织方式可能是把所有类型都放在一个单一文件中，并且只放在那里。避免写那些 Claude 通过查看你的文件系统或代码仓库就能明白的“显而易见”的内容。
+对于更多细节，可以使用渐进式披露（progressive disclosure）。例如，如果你有一些关于如何验证工作结果的独特说明，可以创建一个验证技能（verification skill），然后在 CLAUDE.md 中引用它。
 
 ### Skills
 Think of skills as lightweight guides to let Claude find information when needed. Avoid making them overconstrained, except in highly important areas.
 For long skills, try and use progressive disclosure as much as possible- divide it into many files and split them out.
 It’s best when skills encode particular opinions, knowledge, or best practices that are particular to you, your team, or product.
+可以把 Skills 看作轻量级指南，让 Claude 在需要时找到相关信息。除非是在非常重要的领域，否则不要把它们限制得过于严格。
+对于较长的 Skills，尽量使用渐进式披露——把它拆分成许多文件，并分别独立存放。
+Skills 最适合用来编码那些专属于你、你的团队或你的产品的特定观点、知识或最佳实践。
 
 ### References
 You can @ mention files to include them as references. References allow Claude to refer to in-depth information about the current plan.
 This might be in specs files, mockups, or even entire codebases. Generally you should prefer files that are in code as it provides clear, high-fidelity instructions to Claude in a language it knows very well. For example, a HTML mockup of a design will generally produce better results than a description of the design or a screenshot.
+你可以通过 @ 提及文件，将它们作为引用包含进来。引用可以让 Claude 查阅与当前计划相关的深入信息。
+这些内容可以是规格说明文件、设计原型，甚至整个代码库。通常你应该优先选择代码形式的文件，因为它们能以 Claude 非常熟悉的一种语言，提供清晰、高保真的指令。例如，一个设计的 HTML 原型通常会比对设计的文字描述或截图产生更好的效果。
 
 ## Try simplifying
 Across your system prompt, skills, and CLAUDE.md files, you may need to simplify just like we did. We rolled out a new command called `claude doctor,` which will help you do this automatically as well. For more details on prompting more advanced models specifically, check out our Fable field guide.
+在你的系统提示词、Skills 和 CLAUDE.md 文件中，你可能需要像我们一样进行简化。我们还推出了一个新命令 claude doctor，它也可以帮助你自动完成这项工作。如需了解更多关于如何针对更高级模型进行提示词设计的信息，请查看我们的 Fable 实战指南。
