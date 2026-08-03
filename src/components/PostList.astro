@@ -94,6 +94,7 @@ const visiblePosts = typeof limit === "number" ? posts.slice(0, limit) : posts;
                                 href={href}
                                 image={p.heroImage}
                                 imageAlt={p.title}
+                                imageFit="contain"
                                 description={p.description}
                                 date={pubDate}
                                 variant="post"

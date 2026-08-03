@@ -152,6 +152,17 @@ Workflow examples:
 - 不要在两个位置放重复文件
 - 格式优先使用 `.jpg` 或 `.webp`
 
+### Blog Hero Image Workflow
+
+创建或修改博客 `heroImage` 时：
+
+1. 先完整阅读目标文章及其 Front Matter，不得仅根据标题生成图片。
+2. 阅读 `docs/design/hero-image-system.md`，它是本项目文章头图的唯一视觉规范来源。
+3. 使用 `.agents/skills/dasein-blog-hero/SKILL.md` 中的分析、生成、保存和验证流程。
+4. 文字、几何图形和信息结构优先使用 `scripts/hero-images/` 中的确定性模板。照片、复杂插画或真实材质才使用 `imagegen`。
+5. 将每篇文章的视觉决策保存为 `src/assets/blog/<article-slug>/hero-brief.yml`，确保以后可以复现。
+6. 保存最终图片、更新文章 Front Matter，并按技能中的验收清单完成验证。
+
 ### File Naming Convention
 
 **必须遵守的命名规范**（否则文章无法显示）：

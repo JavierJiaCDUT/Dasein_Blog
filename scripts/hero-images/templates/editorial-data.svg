@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3200" height="1600" viewBox="0 0 3200 1600">
+  <style>
+    text { font-family: "Helvetica Neue", Arial, sans-serif; }
+    .meta { font-size: 42px; font-weight: 650; letter-spacing: 10px; }
+    .primary { font-size: 620px; font-weight: 800; letter-spacing: -28px; }
+    .secondary { font-size: 245px; font-weight: 800; letter-spacing: -8px; }
+    .descriptor { font-size: 72px; font-weight: 750; letter-spacing: 8px; }
+    .footer { font-size: 54px; font-weight: 650; letter-spacing: 18px; }
+    .module-label { font-size: 54px; font-weight: 700; letter-spacing: 7px; }
+    .module-note { font-size: 26px; font-weight: 700; letter-spacing: 4px; }
+  </style>
+  <rect width="3200" height="1600" fill="{{BACKGROUND}}"/>
+  <text x="224" y="122" class="meta" fill="{{TEXT}}">{{KICKER}}</text>
+  <text x="2976" y="122" class="meta" text-anchor="end" fill="{{TEXT}}">{{SOURCE}}</text>
+  <text x="190" y="710" class="primary" fill="{{TEXT}}">{{PRIMARY}}</text>
+  <text x="224" y="1035" class="secondary" fill="{{TEXT}}">{{SECONDARY}}</text>
+  <text x="224" y="1165" class="descriptor" fill="{{TEXT}}">{{DESCRIPTOR}}</text>
+  <line x1="224" y1="1240" x2="1240" y2="1240" stroke="{{LINE}}" stroke-width="5"/>
+  <text x="224" y="1385" class="footer" fill="{{TEXT}}">{{FOOTER}}</text>
+  {{MODULES}}
+</svg>

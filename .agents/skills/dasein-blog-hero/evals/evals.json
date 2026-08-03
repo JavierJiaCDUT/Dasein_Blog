@@ -1,0 +1,27 @@
+{
+  "skill_name": "dasein-blog-hero",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Read src/content/blog/2025-Market-Review-Money-Gold-and-Cycles.md and propose a reproducible hero brief without changing the approved image.",
+      "expected_output": "An editorial-data brief grounded in the article, using a dominant year or market fact, one accent color, and the project safe area.",
+      "files": [
+        "src/content/blog/2025-Market-Review-Money-Gold-and-Cycles.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a hero image for src/content/blog/the-new-rules-of-context-engineering-for-claude-5-models.md and connect it to the article.",
+      "expected_output": "A content-grounded 2:1 image, reproducible brief, correct asset path, and verification report without unrelated edits.",
+      "files": [
+        "src/content/blog/the-new-rules-of-context-engineering-for-claude-5-models.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review all current blog hero images for consistency and identify which template each one follows. Do not modify files.",
+      "expected_output": "A read-only consistency review using the documented visual system, with explicit template mapping and concrete exceptions.",
+      "files": []
+    }
+  ]
+}

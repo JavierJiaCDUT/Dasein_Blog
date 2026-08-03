@@ -1,0 +1,20 @@
+template: editorial-data
+output: hero.png
+visualThesis: "One verified number carries the article's main change."
+
+kicker: "RESEARCH NOTES / 2026"
+source: "JAVIER JIA"
+primary: "80%"
+secondary: "LESS"
+descriptor: "SYSTEM PROMPT"
+footer: "MORE JUDGEMENT"
+accent: "#FF4D1A"
+
+modules:
+  - SYSTEM
+  - SKILLS
+  - MEMORY
+  - TOOLS
+  - REFERENCES
+highlight: MEMORY
+annotation: "LOAD WHEN NEEDED"

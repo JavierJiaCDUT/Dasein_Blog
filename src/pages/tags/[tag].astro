@@ -53,6 +53,7 @@ posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 						date={post.data.pubDate}
 						image={post.data.heroImage}
 						imageAlt={post.data.title}
+						imageFit="contain"
 						variant="post"
 					>
 						{post.data.tags.length > 0 && (

@@ -9,10 +9,10 @@ contentType: "Bilingual Translation"
 language: [en, zh-CN]
 translationMethod: "AI-Assisted"
 originalPubDate: 2026-08-03
-resource: "https://www.anthropic.com/news/context-engineering-claude-5"
+resource: "https://x.com/trq212/status/2080710971228918066?s=20"
 sources:
   - id: anthropic-original
-    resource: "https://www.anthropic.com/news/context-engineering-claude-5"
+    resource: "https://x.com/trq212/status/2080710971228918066?s=20"
     title: "The new rules of context engineering for Claude 5 models"
     author: "Anthropic"
 heroImage: ../../assets/blog/the-new-rules-of-context-engineering-for-claude-5-models/hero.png

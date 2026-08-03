@@ -8,17 +8,31 @@ interface Props {
 	href: string;
 	description?: string;
 	date?: Date | string;
-		image?: ImageMetadata | string;
+	image?: ImageMetadata | string;
 	imageAlt?: string;
+	imageFit?: 'cover' | 'contain';
 	eyebrow?: string;
 	featured?: boolean;
 }
 
-const { title, href, description, date, image, imageAlt = '', eyebrow, featured = false } = Astro.props as Props;
+const {
+	title,
+	href,
+	description,
+	date,
+	image,
+	imageAlt = '',
+	imageFit = 'cover',
+	eyebrow,
+	featured = false,
+} = Astro.props as Props;
 
 const imgWidth = featured ? 1600 : 800;
 const imgHeight = Math.round(imgWidth * 7 / 12);
 const sizes = featured ? '95vw' : '(max-width: 768px) 95vw, 47vw';
+const shouldContainImage = imageFit === 'contain';
+const figureClass = `lg:col-span-full relative overflow-hidden bg-[color-mix(in_oklab,var(--color-ink)_4%,var(--color-surface))]${shouldContainImage ? ' aspect-2/1' : ''}`;
+const imageClass = `lg:col-span-full w-full transition duration-400 group-hover:scale-[1.02] ${shouldContainImage ? 'h-full object-contain object-center' : 'aspect-12/7 object-cover object-top'}`;
 
 const baseDate = typeof date === 'string' ? new Date(date) : date;
 
@@ -31,23 +45,25 @@ const aProps = { href, ...(isExternal ? { rel: 'noopener noreferrer' } : {}) };
 <article class={articleClass}>
 
 		{image && (
-			<figure class="lg:col-span-full relative overflow-hidden bg-[color-mix(in_oklab,var(--color-ink)_4%,var(--color-surface))]">
+			<figure class={figureClass}>
 				{typeof image === 'string' ? (
 					<img
 						src={image}
 						alt={imageAlt}
 						loading="lazy"
-						class="lg:col-span-full aspect-12/7 object-cover object-top w-full transition duration-400 group-hover:scale-[1.02]"
+						class={imageClass}
 					/>
 				) : (
 					<Image
 						src={image}
 						alt={imageAlt}
 						width={imgWidth}
-						height={imgHeight}
+						height={shouldContainImage ? undefined : imgHeight}
+						fit={imageFit}
+						position={shouldContainImage ? 'center' : 'center top'}
 						sizes={sizes}
 						loading="lazy"
-						class="lg:col-span-full aspect-12/7 object-cover object-top w-full transition duration-400 group-hover:scale-[1.02]"
+						class={imageClass}
 					/>
 				)}
 			</figure>
