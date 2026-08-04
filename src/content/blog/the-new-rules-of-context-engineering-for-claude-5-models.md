@@ -28,17 +28,17 @@ Unlike a prompt, context is used generally across many requests, so it cannot be
 
 This can be surprisingly difficult as Claude’s own capabilities evolve. Most recently, we noticed a large jump in the way we prompt the newest generation of Claude models. We removed over 80% of Claude Code’s system prompt for models like Claude Opus 5 and Claude Fable 5 with no measurable loss on our coding evaluations.
 
-Here’s what we’ve learned about prompting this new class of models, and how you can utilize it to update your context engineering. We’ve put these best practices in `claude doctor`, use the command /doctor in Claude Code to rightsize your skills, and CLAUDE.md files.
+Here’s what we’ve learned about prompting this new class of models, and how you can utilize it to update your context engineering. We’ve put these best practices in `claude doctor`, use the command `doctor in Claude Code to rightsize your skills, and CLAUDE.md files.
 
-我之前写过关于如何向最新一代 Claude 5 模型发送提示词，以及如何与它们进行迭代协作以发现您想要构建的内容。
+我之前写过关于如何为最新一代 Claude 5 模型编写提示词，以及如何与它们进行迭代协作以发现你想要构建的内容。
 
-但是，当您向 Claude 发送消息时，提示词只是其接收到的上下文的一小部分。您的大部分上下文是由系统提示词、技能、CLAUDE.md 文件、记忆和其他来源组合而成的。我们称之为上下文工程，它对您在使用 Claude Code 或构建自己的代理时生成的结果有很大影响。
+但是，当你向 Claude 发送消息时，提示词只是其接收到的上下文的一小部分。你的大部分上下文是由系统提示词、技能、CLAUDE.md 文件、记忆和其他来源组合而成的。我们称之为上下文工程，它对你在使用 Claude Code 或构建自己的代理时生成的结果有很大影响。
 
-与提示词不同，上下文在多个请求中通用，因此不能太具体。如何为 Claude 构建这些通用提示和指导，尤其是当您不知道用户的提示词可能是什么时？
+与提示词不同，上下文在多个请求中通用，因此不能太具体。如何为 Claude 构建这些通用提示和指导，尤其是当你不知道用户的提示词可能是什么时？
 
-随着 Claude 自身能力的不断发展，这可能出奇地困难。最近，我们注意到在提示最新一代 Claude 模型时方式有了很大变化。对于 Claude Opus 5 和 Claude Fable 5 等模型，我们删除了 Claude Code 超过 80% 的系统提示词，但在代码评估上没有明显的性能损失。
+随着 Claude 自身能力的不断发展，这可能会出人意料地变得困难。最近，我们注意到在提示最新一代 Claude 模型时方式有了很大变化。对于 Claude Opus 5 和 Claude Fable 5 等模型，我们删除了 Claude Code 超过 80% 的系统提示词，但在代码评估上没有明显的性能损失。
 
-以下是我们在提示这一类新型模型时学到的知识，以及如何利用这些知识来更新您的上下文工程。我们已将这些最佳实践放入 `claude doctor` 中，请在 Claude Code 中使用 /doctor 命令来优化您的技能和 CLAUDE.md 文件。
+以下是我们在提示这一类新型模型时学到的知识，以及如何利用这些知识来更新你的上下文工程。我们已将这些最佳实践放入 `claude doctor` 中，请在 Claude Code 中使用 `/doctor` 命令来精简你的 skills 和 CLAUDE.md 文件。
 
 ## Unhobbling Claude｜为 Claude 松绑
 
@@ -58,7 +58,7 @@ Additionally, Claude Code now has many more tools. Claude used to rely on CLAUDE
 
 例如，在查阅我们内部使用 Claude Code 的交互记录时，我们发现单次请求中会出现多条相互矛盾的信息，比如“视情况保留文档”或“禁止添加注释”，这正是由于系统提示词、技能指令与用户请求之间产生了冲突。
 
-通常情况下，Claude 能够领会用户的意图并给出正确答案，但在决定具体行动之前，它必须更谨慎地权衡这些重叠且冲突的信息。
+通常情况下，Claude 能够领会用户的意图并给出正确答案，但在决定具体行动之前，它必须更谨慎地权衡这些重叠且相互矛盾的信息。
 
 尽管这些限制曾是为了避免最坏情况而设，但我们后来发现，完全可以删去其中的大部分，转而让模型结合上下文语境并运用自身的判断力来处理。
 
@@ -66,7 +66,8 @@ Additionally, Claude Code now has many more tools. Claude used to rely on CLAUDE
  
 ## Then and now｜过去与现在
 
-There were a number of previous context engineering best practices that had become myths. Including:
+There were a number of previous context engineering best practices that had become myths. Including:  
+过去有许多上下文工程的最佳实践如今已沦为迷思。其中包括：
 
 ![alt text](../../../public/blog/the-new-rules-of-context-engineering-for-claude-5-models/2.jpeg)
 
@@ -83,54 +84,6 @@ Still, without these guardrails for older models, the comments Claude wrote woul
 
 In the new system prompt we say: *Write code that reads like the surrounding code: match its comment density, naming, and idiom.*
 
-**Then: Give Claude examples**  
-**Now: Design interfaces**
-
-The number one rule for tool usage was to give Claude examples on how to use them. With our newest models, we’ve found that giving examples actually constrains them to a certain exploration space.
-
-![alt text](../../../public/blog/the-new-rules-of-context-engineering-for-claude-5-models/3.jpeg)
-
-Instead of using examples, think more about the design of your tools, scripts and files- what parameters does Claude have and how can they be more expressive?
-
-For example, in the Todo tool example, just listing status as an enumeration between pending, in_progress, and completed, hints to Claude about how to use it. The instruction on keeping one item in_progress helps define our requested behavior.
-
-**Then: Put it all upfront**  
-**Now: Use progressive disclosure**
-
-Because Claude Code was focused on coding, our system prompt included detailed information on how to do code review and verification. These were not always needed, but when they were, it was crucial information.
-
-Since then, Claude Code has gotten very competent at using progressive disclosure- loading the right context at the right times. For example, we moved verification and code review into their own skills that Claude Code could selectively call.
-
-But progressive disclosure is not just for skills, we also use it for tools. Some of our tools are ‘deferred loading,’ which means the agent must search for their full definitions using ToolSearch before using them. This allows us to have more tools (such as our Task tools) that don’t take up context until they’re needed.
-
-The same can be applied to your own CLAUDE.md and Skill.md files. A common myth is that you want to make these a central repository for every known practice that you might run into, because Claude would not find it otherwise. Instead, consider having a tree of files that can be loaded at the right time.
-
-**Then: Repeat yourself**  
-**Now: Simple tool descriptions**
-
-Earlier Claude models could sometimes need repeated instructions or be more likely to listen to instructions at the end of their context window than at the start. This meant our system prompt would sometimes have references to tools in the main system prompt as well as instructions in the tool description.
-
-We found we could delete these repeat examples and put instructions on how to use tools in the tool descriptions rather than the system prompt.
-
-**Then: Memory in CLAUDE.md files**  
-**Now: Auto-memory**
-
-We used to encourage users to save things to Claude’s memory, by using the # hotkey to write to their CLAUDE.md automatically. Instead, Claude now automatically saves memories that are relevant to the work and to you.
-
-**Then: Simple specs**  
-**Now: Rich references**
-
-In plan mode, Claude Code has heavily relied on markdown files with plans. Storing these files as plans helped Claude refer to them when needed. Another similar best practice was to store specs in the codebase for Claude to refer to while working across longer projects.
-
-But we’ve found that Claude can handle increasingly more complicated references. Instead of simple markdown files, Claude can reference HTML artifacts created by our new artifacts feature.
-
-You may also give Claude references in the form of code. A spec may also be a detailed test suite, or a function in a different codebase that Claude might port.
-
-Rubrics are another form of references. Rubrics allow Claude to try and verify your taste in a particular field (e.g. what does a good API design look like) by using dynamic workflows and spinning up verifier agents with those rubrics.
-
-
-过去有许多上下文工程的最佳实践如今已沦为迷思。其中包括：
-
 **过去：给 Claude 制定规则**  
 **现在：让 Claude 自主判断**
 
@@ -144,6 +97,17 @@ Rubrics are another form of references. Rubrics allow Claude to try and verify y
 
 在新的系统提示词中，我们这样表述：*编写与周围代码风格一致的代码：匹配其注释密度、命名和惯用法。*
 
+**Then: Give Claude examples**  
+**Now: Design interfaces**
+
+The number one rule for tool usage was to give Claude examples on how to use them. With our newest models, we’ve found that giving examples actually constrains them to a certain exploration space.
+
+![alt text](../../../public/blog/the-new-rules-of-context-engineering-for-claude-5-models/3.jpeg)
+
+Instead of using examples, think more about the design of your tools, scripts and files- what parameters does Claude have and how can they be more expressive?
+
+For example, in the Todo tool example, just listing status as an enumeration between pending, in_progress, and completed, hints to Claude about how to use it. The instruction on keeping one item in_progress helps define our requested behavior.
+
 **过去：给 Claude 提供示例**  
 **现在：设计接口**
 
@@ -152,6 +116,17 @@ Rubrics are another form of references. Rubrics allow Claude to try and verify y
 与其使用示例，不如多思考工具、脚本和文件的设计——Claude 拥有哪些参数，如何让这些参数更具表现力？
 
 例如，在 Todo 工具的示例中，仅将状态列为 pending、in_progress 和 completed 的枚举，就能暗示 Claude 如何使用它。而关于保持一个项目处于 in_progress 状态的指令，则有助于界定我们所期望的行为。
+
+**Then: Put it all upfront**  
+**Now: Use progressive disclosure**
+
+Because Claude Code was focused on coding, our system prompt included detailed information on how to do code review and verification. These were not always needed, but when they were, it was crucial information.
+
+Since then, Claude Code has gotten very competent at using progressive disclosure- loading the right context at the right times. For example, we moved verification and code review into their own skills that Claude Code could selectively call.
+
+But progressive disclosure is not just for skills, we also use it for tools. Some of our tools are ‘deferred loading,’ which means the agent must search for their full definitions using ToolSearch before using them. This allows us to have more tools (such as our Task tools) that don’t take up context until they’re needed.
+
+The same can be applied to your own CLAUDE.md and Skill.md files. A common myth is that you want to make these a central repository for every known practice that you might run into, because Claude would not find it otherwise. Instead, consider having a tree of files that can be loaded at the right time.
 
 **过去：将所有内容前置**  
 **现在：采用渐进式披露**
@@ -162,19 +137,43 @@ Rubrics are another form of references. Rubrics allow Claude to try and verify y
 
 但渐进式披露不仅适用于技能，我们也将其用于工具。我们的一些工具采用“延迟加载”，这意味着代理在使用它们之前必须通过 ToolSearch 搜索其完整定义。这使我们能够拥有更多工具（如 Task 工具），且这些工具在需要之前不会占用上下文。
 
-同样的方法也适用于您自己的 CLAUDE.md 和 Skill.md 文件。一个常见的迷思是，您需要将这些文件打造成涵盖所有可能遇到的已知实践的中心仓库，否则 Claude 就找不到它们。相反，您可以考虑构建一个文件树，以便在适当时机加载。
+同样的方法也适用于你自己的 CLAUDE.md 和 Skill.md 文件。一个常见的迷思是，你需要将这些文件打造成涵盖所有可能遇到的已知实践的中心仓库，否则 Claude 就找不到它们。相反，你可以考虑构建一个文件树，以便在适当时机加载。
+
+**Then: Repeat yourself**  
+**Now: Simple tool descriptions**
+
+Earlier Claude models could sometimes need repeated instructions or be more likely to listen to instructions at the end of their context window than at the start. This meant our system prompt would sometimes have references to tools in the main system prompt as well as instructions in the tool description.
+
+We found we could delete these repeat examples and put instructions on how to use tools in the tool descriptions rather than the system prompt.
 
 **过去：重复指令**  
 **现在：简明的工具描述**
 
-早期的 Claude 模型有时需要重复的指令，或者更容易听从上下文窗口末尾而非开头的指令。这意味着我们的系统提示词有时会在主系统提示词中引用工具，同时在工具描述中也包含相关指令。
+早期的 Claude 模型有时需要重复的指令，或者更容易听从上下文窗口（context window）末尾而非开头的指令。这意味着我们的系统提示词有时会在主系统提示词中引用工具，同时在工具描述中也包含相关指令。
 
 我们发现可以删除这些重复的示例，将工具使用指令放在工具描述中，而不是系统提示词里。
+
+**Then: Memory in CLAUDE.md files**  
+**Now: Auto-memory**
+
+We used to encourage users to save things to Claude’s memory, by using the # hotkey to write to their CLAUDE.md automatically. Instead, Claude now automatically saves memories that are relevant to the work and to you.
 
 **过去：将记忆存入 CLAUDE.md 文件**  
 **现在：自动记忆**
 
-过去，我们鼓励用户通过 # 快捷键将内容自动写入 CLAUDE.md，从而保存到 Claude 的记忆中。而现在，Claude 会自动保存与工作和您本人相关的记忆。
+过去，我们鼓励用户通过 # 快捷键将内容自动写入 CLAUDE.md，从而保存到 Claude 的记忆中。而现在，Claude 会自动保存与工作和你本人相关的记忆。
+
+
+**Then: Simple specs**  
+**Now: Rich references**
+
+In plan mode, Claude Code has heavily relied on markdown files with plans. Storing these files as plans helped Claude refer to them when needed. Another similar best practice was to store specs in the codebase for Claude to refer to while working across longer projects.
+
+But we’ve found that Claude can handle increasingly more complicated references. Instead of simple markdown files, Claude can reference HTML artifacts created by our new artifacts feature.
+
+You may also give Claude references in the form of code. A spec may also be a detailed test suite, or a function in a different codebase that Claude might port.
+
+Rubrics are another form of references. Rubrics allow Claude to try and verify your taste in a particular field (e.g. what does a good API design look like) by using dynamic workflows and spinning up verifier agents with those rubrics.
 
 **过去：简单的规范**  
 **现在：丰富的参考资料**
@@ -183,13 +182,14 @@ Rubrics are another form of references. Rubrics allow Claude to try and verify y
 
 但我们发现，Claude 能够处理日益复杂的参考资料。除了简单的 markdown 文件，Claude 还可以引用由我们全新构件功能创建的 HTML 构件。
 
-您还可以以代码的形式向 Claude 提供参考资料。规范也可以是一个详细的测试套件，或者是另一个代码库中 Claude 可能需要移植的函数。
+你还可以以代码的形式向 Claude 提供参考资料。规范也可以是一个详细的测试套件，或者是另一个代码库中 Claude 可能需要移植的函数。
 
-评估标准是另一种形式的参考资料。评估标准允许 Claude 通过动态工作流并启动配备这些标准的验证代理，来尝试并验证您在特定领域的品味（例如，优秀的 API 设计是什么样的）。
+评估标准是另一种形式的参考资料。评估标准允许 Claude 通过动态工作流并启动配备这些标准的验证代理，来尝试并验证你在特定领域的审美偏好（例如，优秀的 API 设计是什么样的）。
 
 ## Applying this to your context｜将这些方法应用到你的上下文中
 
 Pulling this all together, what does this look like when you assemble your context?
+
 把这些内容汇总起来看，当你组装自己的上下文时，它应该是什么样子的呢？
 
 ![alt text](../../../public/blog/the-new-rules-of-context-engineering-for-claude-5-models/4.jpeg)
@@ -206,7 +206,7 @@ Keep your CLAUDE.md lightweight and briefly describe what your repo is for, but 
 Use progressive disclosure for more details, for example if you have several unique instructions on how to verify your work, create a verification skill and reference it from your CLAUDE.md.
 
 让你的 CLAUDE.md 保持轻量，简要描述你的代码仓库是做什么的，但要把大部分 token 花在代码库中容易踩坑的地方。例如，你的代码组织方式可能是把所有类型都放在一个单一文件中，并且只放在那里。避免写那些 Claude 通过查看你的文件系统或代码仓库就能明白的“显而易见”的内容。
-对于更多细节，可以使用渐进式披露（progressive disclosure）。例如，如果你有一些关于如何验证工作结果的独特说明，可以创建一个验证技能（verification skill），然后在 CLAUDE.md 中引用它。
+充分运用渐进式披露（progressive disclosure），例如，如果你有一些关于如何验证工作结果的独特说明，可以创建一个验证技能（verification skill），然后在 CLAUDE.md 中引用它。
 
 ### Skills
 
